@@ -4,6 +4,7 @@
     <string name="button">Taste auswählen</string>
     <string name="button_summary">Wähle eine Taste aus.</string>
     <string name="enable_usb_debugging_first">Aktiviere zuerst USB-Debugging in den Entwickleroptionen</string>
+    <string name="not_press_button">Bitte drücke keine Tasten auf der Fernbedienung!</string>
     <string name="advanced_reboot">Erweiterter Neustart</string>
     <string name="shutdown">Ausschalten</string>
     <string name="standby">Ruhemodus</string>
@@ -14,6 +15,7 @@
     <string name="more">Mehr…</string>
     <string name="hard_shutdown">Hartes Ausschalten</string>
     <string name="hard_reboot">Hartes Neustarten</string>
+    <string name="reboot_to_safe_mode">Neustarten (abgesicherter Modus)</string>
     <string name="recents">Zuletzt verwendete Anwendungen</string>
     <string name="screensaver">Bildschirmschoner</string>
     <string name="screenshot">Bildschirmfoto</string>

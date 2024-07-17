@@ -5,6 +5,7 @@
     <string name="button">Select button</string>
     <string name="button_summary">Select a button.</string>
     <string name="enable_usb_debugging_first">Enable USB debugging first in the developer options</string>
+    <string name="not_press_button">Please do not press any buttons on the remote control!</string>
     <string name="advanced_reboot">Advanced Reboot</string>
     <string name="shutdown">Shutdown</string>
     <string name="standby">Standby</string>
@@ -15,6 +16,7 @@
     <string name="more">More…</string>
     <string name="hard_shutdown">Hard shutdown</string>
     <string name="hard_reboot">Hard reboot</string>
+    <string name="reboot_to_safe_mode">Reboot (Safe mode)</string>
     <string name="recents">Recents</string>
     <string name="screensaver">Screensaver</string>
     <string name="screenshot">Screenshot</string>

@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.jamal2367.advancedreboot.MainActivity.ThreadUtil
 import com.tananaev.adblib.AdbBase64
 import com.tananaev.adblib.AdbConnection
 import com.tananaev.adblib.AdbCrypto
@@ -83,6 +84,7 @@ class DialogActivity : AppCompatActivity() {
         val dialogItems = arrayOf(
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_power_24dp)!!, getString(R.string.hard_shutdown)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_restart_24dp)!!, getString(R.string.hard_reboot)),
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_safe_mode_24dp)!!, getString(R.string.reboot_to_safe_mode)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_window_24dp)!!, getString(R.string.recents)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_panorama_24dp)!!, getString(R.string.screensaver)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_screenshot_24dp)!!, getString(R.string.screenshot)),
@@ -99,14 +101,15 @@ class DialogActivity : AppCompatActivity() {
                 when (which) {
                     0 -> hardShutdownCommand()
                     1 -> hardRebootCommand()
-                    2 -> recentsCommand()
-                    3 -> screensaverCommand()
-                    4 -> screenshotCommand()
-                    5 -> {
+                    2 -> safeModeCommand()
+                    3 -> recentsCommand()
+                    4 -> screensaverCommand()
+                    5 -> screenshotCommand()
+                    6 -> {
                         isDialogReopened = true
                         showHiddenOptionsDialog()
                     }
-                    6 -> {
+                    7 -> {
                         isDialogReopened = true
                         showMainOptionsDialog()
                     }
@@ -307,6 +310,48 @@ class DialogActivity : AppCompatActivity() {
         }
     }
 
+    private fun safeModeCommand() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                ThreadUtil.runOnUiThread {
+                    Toast.makeText(applicationContext, getString(R.string.not_press_button), Toast.LENGTH_LONG).show()
+                }
+
+                connection?.open("shell:am force-stop com.android.tv.settings")
+
+                Thread.sleep(1000)
+                connection?.open("shell:input keyevent 176")
+
+                Thread.sleep(1000)
+                connection?.open("shell:for i in \$(seq 1 5); do input keyevent 19; done")
+
+                ThreadUtil.runOnUiThread {
+                    Toast.makeText(applicationContext, getString(R.string.not_press_button), Toast.LENGTH_LONG).show()
+                }
+
+                Thread.sleep(1000)
+                connection?.open("shell:for i in \$(seq 1 3); do input keyevent 20; done")
+
+                Thread.sleep(1000)
+                connection?.open("shell:input keyevent 66")
+
+                Thread.sleep(1000)
+                connection?.open("shell:for i in \$(seq 1 19); do input keyevent 20; done")
+
+                Thread.sleep(2500)
+                connection?.open("shell:input keyevent --longpress 23")
+
+                Thread.sleep(2000)
+                connection?.open("shell:for i in \$(seq 1 2); do input keyevent 19; done")
+
+                Thread.sleep(1000)
+                connection?.open("shell:input keyevent 23")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
     private fun recentsCommand() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -332,8 +377,8 @@ class DialogActivity : AppCompatActivity() {
     private fun screenshotCommand() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // Wait for 1 seconds
-                Thread.sleep(1000)
+                // Wait for 0.5 seconds
+                Thread.sleep(500)
 
                 connection?.open("shell:input keyevent 120")
                 Log.d("TAG", "State: Screenshot!")
