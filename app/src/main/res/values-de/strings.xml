@@ -1,0 +1,53 @@
+<resources>
+    <string name="settings">Einstellungen</string>
+    <string name="about">Über</string>
+    <string name="button">Taste auswählen</string>
+    <string name="button_summary">Wähle eine Taste aus.</string>
+    <string name="enable_usb_debugging_first">Aktiviere zuerst USB-Debugging in den Entwickleroptionen</string>
+    <string name="advanced_reboot">Erweiterter Neustart</string>
+    <string name="shutdown">Ausschalten</string>
+    <string name="standby">Ruhemodus</string>
+    <string name="reboot">Neustart</string>
+    <string name="recovery">Recovery</string>
+    <string name="fastboot">Fastboot</string>
+    <string name="coreelec">CoreELEC</string>
+    <string name="more">Mehr…</string>
+    <string name="hard_shutdown">Hartes Ausschalten</string>
+    <string name="hard_reboot">Hartes Neustarten</string>
+    <string name="recents">Zuletzt verwendete Anwendungen</string>
+    <string name="screensaver">Bildschirmschoner</string>
+    <string name="screenshot">Bildschirmfoto</string>
+    <string name="hidden_menus">Versteckte Menüs</string>
+    <string name="default_apps">Standard Apps</string>
+    <string name="standard_launcher">Standard Launcher</string>
+    <string name="edid_information">EDID Informationen</string>
+    <string name="drm_information">DRM Informationen</string>
+    <string name="extended_sound_settings">Erweiterte Toneinstellungen</string>
+    <string name="more_extended_sound_settings">Noch mehr erweiterte Toneinstellungen</string>
+    <string name="advanced_options">Erweiterte Optionen</string>
+    <string name="advanced_hdmi_cec_settings">Erweiterte HDMI-CEC-Einstellungen</string>
+    <string name="sound_locate_setting">Ton Ortung</string>
+    <string name="dessert_case_easter_egg">Dessert Case (Easter Egg)</string>
+    <string name="marshmallow_land_easter_egg">Marshmallow Land (Easter Egg)</string>
+    <string name="back">Zurück…</string>
+
+    <string-array name="key_code_labels">
+        <item>Lesezeichen Taste</item>
+        <item>TV-Guide Taste</item>
+        <item>Rote Taste</item>
+        <item>Grüne Taste</item>
+        <item>Gelbe Taste</item>
+        <item>Blaue Taste</item>
+        <item>Taste 0</item>
+        <item>Taste 1</item>
+        <item>Taste 2</item>
+        <item>Taste 3</item>
+        <item>Taste 4</item>
+        <item>Taste 5</item>
+        <item>Taste 6</item>
+        <item>Taste 7</item>
+        <item>Taste 8</item>
+        <item>Taste 9</item>
+        <item>None</item>
+    </string-array>
+</resources>

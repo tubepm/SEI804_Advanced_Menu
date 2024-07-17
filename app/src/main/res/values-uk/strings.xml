@@ -1,0 +1,27 @@
+<resources>
+    <string name="settings">Парамерти</string>
+    <string name="about">Про програму</string>
+    <string name="button">Вибір кнопки</string>
+    <string name="button_summary">Виберіть кнопку.</string>
+    <string name="enable_usb_debugging_first">Спершу увімкніть налагодження по USB у параментах розробника</string>
+
+    <string-array name="key_code_labels">
+        <item>Кнопка Закладки</item>
+        <item>Кнопка Телегід</item>
+        <item>Червона кнопка</item>
+        <item>Зелена кнопка</item>
+        <item>Жовта кнопка</item>
+        <item>Синя кнопка</item>
+        <item>Кнопка 0</item>
+        <item>Кнопка 1</item>
+        <item>Кнопка 2</item>
+        <item>Кнопка 3</item>
+        <item>Кнопка 4</item>
+        <item>Кнопка 5</item>
+        <item>Кнопка 6</item>
+        <item>Кнопка 7</item>
+        <item>Кнопка 8</item>
+        <item>Кнопка 9</item>
+        <item>Немає</item>
+    </string-array>
+</resources>

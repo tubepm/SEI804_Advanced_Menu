@@ -1,0 +1,53 @@
+<resources>
+    <string name="settings">Beállítások</string>
+    <string name="about">Az alkalmazásról</string>
+    <string name="button">Gomb kiválasztása</string>
+    <string name="button_summary">Gomb a kiválasztása.</string>
+    <string name="enable_usb_debugging_first">Először engedélyezze az USB hibakeresést a fejlesztői beállításoknál</string>
+    <string name="advanced_reboot">Speciális újraindítás</string>
+    <string name="shutdown">Leállítás</string>
+    <string name="standby">Készenlét</string>
+    <string name="reboot">Újraindítás</string>
+    <string name="recovery">Helyreállítás</string>
+    <string name="fastboot">Gyorsindítás</string>
+    <string name="coreelec">CoreELEC</string>
+    <string name="more">Továbbiak…</string>
+    <string name="hard_shutdown">Kényszerített leállítás</string>
+    <string name="hard_reboot">Kényszerített újraindítás</string>
+    <string name="recents">Legutóbbiak</string>
+    <string name="screensaver">Képernyővédő</string>
+    <string name="screenshot">Képernyőkép</string>
+    <string name="hidden_menus">Rejtett menük</string>
+    <string name="default_apps">Alapértelmezett alkalmazások</string>
+    <string name="standard_launcher">Normál Indító</string>
+    <string name="edid_information">EDID-adatok</string>
+    <string name="drm_information">DRM-információ</string>
+    <string name="extended_sound_settings">Bővített hangbeállítások</string>
+    <string name="more_extended_sound_settings">További bővített hangbeállítások</string>
+    <string name="advanced_options">Speciális beállítások</string>
+    <string name="advanced_hdmi_cec_settings">Speciális HDMI-CEC beállítások</string>
+    <string name="sound_locate_setting">Hangkeresési beállítás</string>
+    <string name="dessert_case_easter_egg">Húsvéti tojás (meglepetés) </string>
+    <string name="marshmallow_land_easter_egg">Marshmallow Land (meglepetés)</string>
+    <string name="back">Vissza…</string>
+
+    <string-array name="key_code_labels">
+        <item>Bookmark Gomb</item>
+        <item>TV-Guide Gomb</item>
+        <item>Vörös Gomb</item>
+        <item>Zöld Gomb</item>
+        <item>Sárga Gomb</item>
+        <item>Kék Gomb</item>
+        <item>0-ás szám gomb</item>
+        <item>1-es szám gomb</item>
+        <item>2-es szám gomb</item>
+        <item>3-as szám gomb</item>
+        <item>4-es szám gomb</item>
+        <item>5-ös szám gomb</item>
+        <item>6-os szám gomb</item>
+        <item>7-es szám gomb</item>
+        <item>8-as szám gomb</item>
+        <item>9-es szám gomb</item>
+        <item>Nincs</item>
+    </string-array>
+</resources>

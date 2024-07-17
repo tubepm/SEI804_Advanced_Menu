@@ -1,0 +1,75 @@
+<resources>
+    <string name="app_name" translatable="false">SEI804 Advanced Reboot</string>
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
+    <string name="button">Select button</string>
+    <string name="button_summary">Select a button.</string>
+    <string name="enable_usb_debugging_first">Enable USB debugging first in the developer options</string>
+    <string name="advanced_reboot">Advanced Reboot</string>
+    <string name="shutdown">Shutdown</string>
+    <string name="standby">Standby</string>
+    <string name="reboot">Reboot</string>
+    <string name="recovery">Recovery</string>
+    <string name="fastboot">Fastboot</string>
+    <string name="coreelec">CoreELEC</string>
+    <string name="more">More…</string>
+    <string name="hard_shutdown">Hard shutdown</string>
+    <string name="hard_reboot">Hard reboot</string>
+    <string name="recents">Recents</string>
+    <string name="screensaver">Screensaver</string>
+    <string name="screenshot">Screenshot</string>
+    <string name="hidden_menus">Hidden menus</string>
+    <string name="default_apps">Default Apps</string>
+    <string name="standard_launcher">Standard Launcher</string>
+    <string name="edid_information">EDID Information</string>
+    <string name="drm_information">DRM Information</string>
+    <string name="extended_sound_settings">Extended sound settings</string>
+    <string name="more_extended_sound_settings">More extended sound settings</string>
+    <string name="advanced_options">Advanced options</string>
+    <string name="advanced_hdmi_cec_settings">Advanced HDMI-CEC settings</string>
+    <string name="sound_locate_setting">Sound Locate setting</string>
+    <string name="dessert_case_easter_egg">Dessert Case (Easter Egg)</string>
+    <string name="marshmallow_land_easter_egg">Marshmallow Land (Easter Egg)</string>
+    <string name="back">Back…</string>
+
+    <string-array name="key_code_labels">
+        <item>Bookmark button</item>
+        <item>TV Guide button</item>
+        <item>Red button</item>
+        <item>Green button</item>
+        <item>Yellow button</item>
+        <item>Blue button</item>
+        <item>Button 0</item>
+        <item>Button 1</item>
+        <item>Button 2</item>
+        <item>Button 3</item>
+        <item>Button 4</item>
+        <item>Button 5</item>
+        <item>Button 6</item>
+        <item>Button 7</item>
+        <item>Button 8</item>
+        <item>Button 9</item>
+        <item>None</item>
+    </string-array>
+
+    <string-array name="key_codes">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+    </string-array>
+</resources>
