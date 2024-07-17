@@ -4,6 +4,7 @@
     <string name="button">Gomb kiválasztása</string>
     <string name="button_summary">Gomb a kiválasztása.</string>
     <string name="enable_usb_debugging_first">Először engedélyezze az USB hibakeresést a fejlesztői beállításoknál</string>
+    <string name="not_press_button">Kérlek, ne nyomd meg a távirányító egyetlen gombját sem!</string>
     <string name="advanced_reboot">Speciális újraindítás</string>
     <string name="shutdown">Leállítás</string>
     <string name="standby">Készenlét</string>
@@ -14,6 +15,7 @@
     <string name="more">Továbbiak…</string>
     <string name="hard_shutdown">Kényszerített leállítás</string>
     <string name="hard_reboot">Kényszerített újraindítás</string>
+    <string name="reboot_to_safe_mode">Újraindítás (csökkentett mód)</string>
     <string name="recents">Legutóbbiak</string>
     <string name="screensaver">Képernyővédő</string>
     <string name="screenshot">Képernyőkép</string>
