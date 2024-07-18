@@ -142,7 +142,6 @@ class DialogActivity : AppCompatActivity() {
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.more_extended_sound_settings)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.advanced_options)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.advanced_hdmi_cec_settings)),
-            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.sound_locate_setting)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.dessert_case_easter_egg)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.marshmallow_land_easter_egg))
         )
@@ -166,9 +165,8 @@ class DialogActivity : AppCompatActivity() {
                     6 -> moreExtendedSoundCommand()
                     7 -> advancedOptionsCommand()
                     8 -> hdmiCECSettingsCommand()
-                    9 -> soundLocateSettingsCommand()
-                    10 -> easterEggDessertCaseCommand()
-                    11 -> easterEggMarshmallowLandCommand()
+                    9 -> easterEggDessertCaseCommand()
+                    10 -> easterEggMarshmallowLandCommand()
                 }
             }
             .setOnDismissListener {
@@ -492,17 +490,6 @@ class DialogActivity : AppCompatActivity() {
             try {
                 connection?.open("shell:am start -n com.droidlogic.tv.settings/.customdt.HdmiCecForDTActivity")
                 Log.d("TAG", "State: HDMI CEC Settings Activity!")
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    private fun soundLocateSettingsCommand() {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                connection?.open("shell:am start -n com.nes.sound.pair/com.nes.sound.component.activity.SoundLocateActivity")
-                Log.d("TAG", "State: Sound Locate Settings Activity!")
             } catch (e: Exception) {
                 e.printStackTrace()
             }
