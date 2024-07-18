@@ -1,0 +1,55 @@
+<resources>
+    <string name="settings">Настройки</string>
+    <string name="about">За програмата</string>
+    <string name="button">Избор на бутон</string>
+    <string name="button_summary">Изберете бутон, за да отворите диалоговия прозорец.</string>
+    <string name="enable_usb_debugging_first">Първо активирайте USB отстраняване на грешки в опциите за програмисти.</string>
+    <string name="not_press_button">Тази функция е експериментална!\n\nПреди да продължите, е необходимо да се върнете към стартовия панел.\nНе продължавайте, ако не сте в стартовия панел!\n\nСлед като натиснете бутона „OK“, не натискайте бутони на дистанционно управление, тъй като това може да доведе до неизправности.</string>
+    <string name="advanced_reboot">Разширено рестартиране</string>
+    <string name="shutdown">Изключване</string>
+    <string name="standby">В готовност</string>
+    <string name="reboot">Рестарт</string>
+    <string name="recovery">Рестарт в Recovery</string>
+    <string name="fastboot">Бързо стартиране</string>
+    <string name="coreelec">CoreELEC</string>
+    <string name="more">Още…</string>
+    <string name="hard_shutdown">Принудително изключване</string>
+    <string name="hard_reboot">Принудително рестартиране</string>
+    <string name="reboot_to_safe_mode">Рестартиране (безопасен режим)</string>
+    <string name="recents">Скорошни</string>
+    <string name="screensaver">Скрийнсейвър</string>
+    <string name="screenshot">Екранна снимка</string>
+    <string name="hidden_menus">Скрити менюта…</string>
+    <string name="hidden_menus_experimental">Скрити менюта (експериментално)</string>
+    <string name="default_apps">Приложения по подразбиране</string>
+    <string name="standard_launcher">Стандартен Launcher</string>
+    <string name="edid_information">EDID Информация</string>
+    <string name="drm_information">DRM Информация</string>
+    <string name="extended_sound_settings">Разширени настройки на звука</string>
+    <string name="more_extended_sound_settings">Още разширени настройки на звука</string>
+    <string name="advanced_options">Разширени опции</string>
+    <string name="advanced_hdmi_cec_settings">Разширени настройки за HDMI-CEC</string>
+    <string name="dessert_case_easter_egg">Dessert Case (Easter Egg)</string>
+    <string name="marshmallow_land_easter_egg">Marshmallow Land (Easter Egg)</string>
+    <string name="back">Назад…</string>
+
+    <string-array name="key_code_labels">
+        <item>Избранное</item>
+        <item>Телегид</item>
+        <item>Черве Бутон</item>
+        <item>Зелен Бутон</item>
+        <item>Жълт Бутон</item>
+        <item>Син Бутон</item>
+        <item>Бутон 0</item>
+        <item>Бутон 1</item>
+        <item>Бутон 2</item>
+        <item>Бутон 3</item>
+        <item>Бутон 4</item>
+        <item>Бутон 5</item>
+        <item>Бутон 6</item>
+        <item>Бутон 7</item>
+        <item>Бутон 8</item>
+        <item>Бутон 9</item>
+        <item>Нищо</item>
+    </string-array>
+</resources>

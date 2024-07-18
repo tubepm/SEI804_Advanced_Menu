@@ -2,8 +2,36 @@
     <string name="settings">Настройки</string>
     <string name="about">О программе</string>
     <string name="button">Выбор кнопки</string>
-    <string name="button_summary">Выберите кнопку.</string>
+    <string name="button_summary">Выберите кнопку, чтобы открыть диалоговое окно.</string>
     <string name="enable_usb_debugging_first">Сначала включите отладку по USB в настройках разработчика.</string>
+    <string name="not_press_button">Эта функция экспериментальная!\n\nПрежде чем продолжить, необходимо вернуться в лаунчер.\nНе продолжайте, если вы не в лаунчере!\n\nПосле нажатия кнопки “OK”, не нажимайте никакие кнопки на пульте дистанционного управления, так как это может привести к неисправности..</string>
+    <string name="advanced_reboot">Расширенная перезагрузка</string>
+    <string name="shutdown">Выключить</string>
+    <string name="standby">Режим ожидания</string>
+    <string name="reboot">Перезагрузка</string>
+    <string name="recovery">Recovery</string>
+    <string name="fastboot">Fastboot</string>
+    <string name="coreelec">CoreELEC</string>
+    <string name="more">Больше…</string>
+    <string name="hard_shutdown">Принудительное выключение</string>
+    <string name="hard_reboot">Принудительная перезагрузка</string>
+    <string name="reboot_to_safe_mode">Перезагрузка (Безопасный режим)</string>
+    <string name="recents">Недавно открытое</string>
+    <string name="screensaver">Заставка</string>
+    <string name="screenshot">Скриншот</string>
+    <string name="hidden_menus">Скрытое меню…</string>
+    <string name="hidden_menus_experimental">Скрытое меню (эксперементальное)</string>
+    <string name="default_apps">Приложения по умолчанию</string>
+    <string name="standard_launcher">Стандартный лаунчер</string>
+    <string name="edid_information">EDID Информация</string>
+    <string name="drm_information">DRM Информация</string>
+    <string name="extended_sound_settings">Расширенные настройки звука</string>
+    <string name="more_extended_sound_settings">Больше настроек звука</string>
+    <string name="advanced_options">Расширенные настройки</string>
+    <string name="advanced_hdmi_cec_settings">Расширенные настройки HDMI-CEC</string>
+    <string name="dessert_case_easter_egg">Dessert Case (пасхалка)</string>
+    <string name="marshmallow_land_easter_egg">Marshmallow Land (пасхалка)</string>
+    <string name="back">Назад…</string>
 
     <string-array name="key_code_labels">
         <item>Избранное</item>

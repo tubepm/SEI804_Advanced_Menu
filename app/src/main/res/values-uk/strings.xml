@@ -1,9 +1,37 @@
 <resources>
     <string name="settings">Парамерти</string>
     <string name="about">Про програму</string>
-    <string name="button">Вибір кнопки</string>
-    <string name="button_summary">Виберіть кнопку.</string>
+    <string name="button">Виберіть кнопку</string>
+    <string name="button_summary">Виберіть кнопку, щоб відкрити діалогове вікно.</string>
     <string name="enable_usb_debugging_first">Спершу увімкніть налагодження по USB у параментах розробника</string>
+    <string name="not_press_button">Ця функція є експериментальною!\n\nПеред продовженням необхідно повернутися до лаунчера.\nНе продовжуйте, якщо ви не перебуваєте в лаунчері!\n\nПісля натискання кнопки “OK” не натискайте жодних кнопок на пульті дистанційного керування, оскільки це може призвести до збоїв у роботі.</string>
+    <string name="advanced_reboot">Розширене перезавантаження</string>
+    <string name="shutdown">Вимкнення</string>
+    <string name="standby">Режим очікування</string>
+    <string name="reboot">Перезавантаження</string>
+    <string name="recovery">Recovery</string>
+    <string name="fastboot">Fastboot</string>
+    <string name="coreelec">CoreELEC</string>
+    <string name="more">Ще…</string>
+    <string name="hard_shutdown">Жорстке вимкнення</string>
+    <string name="hard_reboot">Жорстке перезавантаження</string>
+    <string name="reboot_to_safe_mode">Перезавантаження (безпечний режим)</string>
+    <string name="recents">Нещодавні додатки</string>
+    <string name="screensaver">Заставка</string>
+    <string name="screenshot">Скріншот</string>
+    <string name="hidden_menus">Приховані меню…</string>
+    <string name="hidden_menus_experimental">Приховані меню (експериментальні)</string>
+    <string name="default_apps">Додатки за замовчуванням</string>
+    <string name="standard_launcher">Лаунчер за замовчуванням</string>
+    <string name="edid_information">Інформація про EDID</string>
+    <string name="drm_information">Інформація про DRM</string>
+    <string name="extended_sound_settings">Розширені параметри звуку</string>
+    <string name="more_extended_sound_settings">Більше розширених параметрів звуку</string>
+    <string name="advanced_options">Розширені параметри</string>
+    <string name="advanced_hdmi_cec_settings">Розширені параметри HDMI-CEC</string>
+    <string name="dessert_case_easter_egg">Десертний кейс (Великодка)</string>
+    <string name="marshmallow_land_easter_egg">Зефірна країна (Великодка)</string>
+    <string name="back">Назад…</string>
 
     <string-array name="key_code_labels">
         <item>Кнопка Закладки</item>
@@ -24,4 +52,5 @@
         <item>Кнопка 9</item>
         <item>Немає</item>
     </string-array>
+
 </resources>
