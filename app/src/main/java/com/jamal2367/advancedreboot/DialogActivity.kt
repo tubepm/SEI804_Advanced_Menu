@@ -101,7 +101,7 @@ class DialogActivity : AppCompatActivity() {
                 when (which) {
                     0 -> hardShutdownCommand()
                     1 -> hardRebootCommand()
-                    2 -> safeModeCommand()
+                    2 -> warningDialog()
                     3 -> recentsCommand()
                     4 -> screensaverCommand()
                     5 -> screenshotCommand()
@@ -163,6 +163,29 @@ class DialogActivity : AppCompatActivity() {
                         showMoreOptionsDialog()
                     }
                 }
+            }
+            .setOnDismissListener {
+                if (!isDialogReopened) {
+                    finish()
+                }
+                isDialogReopened = false
+            }
+            .show()
+    }
+
+    private fun warningDialog() {
+        isDialogReopened = true
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(android.R.string.dialog_alert_title)
+            .setMessage(R.string.not_press_button)
+            .setIcon(R.drawable.ic_warning_24dp)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                safeModeCommand()
+            }
+            .setNegativeButton(android.R.string.cancel) { _, _ ->
+                isDialogReopened = true
+                showMoreOptionsDialog()
             }
             .setOnDismissListener {
                 if (!isDialogReopened) {
@@ -313,10 +336,6 @@ class DialogActivity : AppCompatActivity() {
     private fun safeModeCommand() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                ThreadUtil.runOnUiThread {
-                    Toast.makeText(applicationContext, getString(R.string.not_press_button), Toast.LENGTH_LONG).show()
-                }
-
                 connection?.open("shell:am force-stop com.android.tv.settings")
 
                 Thread.sleep(1000)
@@ -324,10 +343,6 @@ class DialogActivity : AppCompatActivity() {
 
                 Thread.sleep(1000)
                 connection?.open("shell:for i in \$(seq 1 5); do input keyevent 19; done")
-
-                ThreadUtil.runOnUiThread {
-                    Toast.makeText(applicationContext, getString(R.string.not_press_button), Toast.LENGTH_LONG).show()
-                }
 
                 Thread.sleep(1000)
                 connection?.open("shell:for i in \$(seq 1 3); do input keyevent 20; done")

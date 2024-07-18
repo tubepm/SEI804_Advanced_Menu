@@ -10,6 +10,7 @@
 
     <style name="AppDialog" parent="Theme.Material3.Dark.Dialog">
         <item name="colorSurfaceContainerHigh">@android:color/system_neutral2_900</item>
+        <item name="colorPrimary">?android:attr/textColorAlertDialogListItem</item>
     </style>
 
     <style name="ThemeOverlay.App.AlertDialogTheme" parent="@style/ThemeOverlay.Material3.MaterialAlertDialog">
