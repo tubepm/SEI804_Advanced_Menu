@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.jamal2367.advancedreboot.MainActivity.ThreadUtil
 import com.tananaev.adblib.AdbBase64
 import com.tananaev.adblib.AdbConnection
 import com.tananaev.adblib.AdbCrypto
@@ -177,7 +176,7 @@ class DialogActivity : AppCompatActivity() {
         isDialogReopened = true
 
         MaterialAlertDialogBuilder(this)
-            .setTitle(android.R.string.dialog_alert_title)
+            .setTitle(getString(android.R.string.dialog_alert_title) + "!")
             .setMessage(R.string.not_press_button)
             .setIcon(R.drawable.ic_warning_24dp)
             .setPositiveButton(android.R.string.ok) { _, _ ->
@@ -339,7 +338,7 @@ class DialogActivity : AppCompatActivity() {
                 connection?.open("shell:am force-stop com.android.tv.settings")
 
                 Thread.sleep(1000)
-                connection?.open("shell:input keyevent 176")
+                connection?.open("shell:am start -n com.android.tv.settings/.MainSettings")
 
                 Thread.sleep(1000)
                 connection?.open("shell:for i in \$(seq 1 5); do input keyevent 19; done")
@@ -359,7 +358,7 @@ class DialogActivity : AppCompatActivity() {
                 Thread.sleep(2000)
                 connection?.open("shell:for i in \$(seq 1 2); do input keyevent 19; done")
 
-                Thread.sleep(1000)
+                Thread.sleep(2000)
                 connection?.open("shell:input keyevent 23")
             } catch (e: Exception) {
                 e.printStackTrace()
