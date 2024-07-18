@@ -19,7 +19,7 @@
     <string name="recents">Legutóbbiak</string>
     <string name="screensaver">Képernyővédő</string>
     <string name="screenshot">Képernyőkép</string>
-    <string name="hidden_menus">Rejtett menük</string>
+    <string name="hidden_menus">Rejtett menük (kísérleti)</string>
     <string name="default_apps">Alapértelmezett alkalmazások</string>
     <string name="standard_launcher">Normál Indító</string>
     <string name="edid_information">EDID-adatok</string>

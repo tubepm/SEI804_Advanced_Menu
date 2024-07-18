@@ -20,7 +20,7 @@
     <string name="recents">Recents</string>
     <string name="screensaver">Screensaver</string>
     <string name="screenshot">Screenshot</string>
-    <string name="hidden_menus">Hidden menus</string>
+    <string name="hidden_menus">Hidden menus (experimental)</string>
     <string name="default_apps">Default Apps</string>
     <string name="standard_launcher">Standard Launcher</string>
     <string name="edid_information">EDID Information</string>
