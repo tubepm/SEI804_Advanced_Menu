@@ -2,9 +2,9 @@
     <string name="settings">Beállítások</string>
     <string name="about">Az alkalmazásról</string>
     <string name="button">Gomb kiválasztása</string>
-    <string name="button_summary">Gomb a kiválasztása.</string>
+    <string name="button_summary">Válasszon egy gombot a párbeszédpanel megnyitásához.</string>
     <string name="enable_usb_debugging_first">Először engedélyezze az USB hibakeresést a fejlesztői beállításoknál</string>
-    <string name="not_press_button">Kérlek, ne nyomd meg a távirányító egyetlen gombját sem!</string>
+    <string name="not_press_button">Ez a funkció kísérleti jellegű!\n\nFolytatás előtt vissza kell térnie a főoldalra.\nNe folytassa, ha nincs a főoldalon!\n\nAz „OK” gomb megnyomása után ne nyomjon meg egyetlen gombot sem a főoldalon, vagy távirányítón, mert ez hibás működéshez vezethet.</string>
     <string name="advanced_reboot">Speciális újraindítás</string>
     <string name="shutdown">Leállítás</string>
     <string name="standby">Készenlét</string>
