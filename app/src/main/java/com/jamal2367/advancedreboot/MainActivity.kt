@@ -26,7 +26,6 @@ class MainActivity : AccessibilityService(), SharedPreferences.OnSharedPreferenc
     }
 
     override fun onKeyEvent(event: KeyEvent): Boolean {
-
         if (event.keyCode == standardKeyCode) {
             if (event.action == KeyEvent.ACTION_DOWN) {
                 return true
