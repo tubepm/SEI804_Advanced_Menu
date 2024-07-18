@@ -2,9 +2,9 @@
     <string name="settings">Einstellungen</string>
     <string name="about">Über</string>
     <string name="button">Taste auswählen</string>
-    <string name="button_summary">Wähle eine Taste aus.</string>
+    <string name="button_summary">Wähle eine Taste aus, um den Dialog zu öffnen.</string>
     <string name="enable_usb_debugging_first">Aktiviere zuerst USB-Debugging in den Entwickleroptionen</string>
-    <string name="not_press_button">Bitte drücke keine Tasten auf der Fernbedienung!</string>
+    <string name="not_press_button">Diese Funktion ist experimentell!\n\nVor dem Fortfahren ist eine Rückkehr zum Launcher erforderlich.\nFahre nicht fort, wenn du nicht im Launcher bist!\n\nNach Betätigen der Schaltfläche “OK” ist das Drücken von Tasten auf der Fernbedienung zu unterlassen, da dies zu Fehlfunktionen führen könnte.</string>
     <string name="advanced_reboot">Erweiterter Neustart</string>
     <string name="shutdown">Ausschalten</string>
     <string name="standby">Ruhemodus</string>
