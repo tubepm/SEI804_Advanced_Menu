@@ -19,7 +19,8 @@
     <string name="recents">Zuletzt verwendete Anwendungen</string>
     <string name="screensaver">Bildschirmschoner</string>
     <string name="screenshot">Bildschirmfoto</string>
-    <string name="hidden_menus">Versteckte Menüs (experimentell)</string>
+    <string name="hidden_menus">Versteckte Menüs…</string>
+    <string name="hidden_menus_experimental">Versteckte Menüs (experimentell)</string>
     <string name="default_apps">Standard Apps</string>
     <string name="standard_launcher">Standard Launcher</string>
     <string name="edid_information">EDID Informationen</string>

@@ -80,37 +80,45 @@ class DialogActivity : AppCompatActivity() {
     }
 
     private fun showMoreOptionsDialog() {
+        //val drawable1 = AppCompatResources.getDrawable(this, R.drawable.ic_disabled_visible_24dp)!!
+        //val drawable2 = AppCompatResources.getDrawable(this, R.drawable.ic_forward_24dp)!!
+
+        //drawable1.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)
+        //drawable2.setBounds(0, 0, drawable2.intrinsicWidth, drawable2.intrinsicHeight)
+
+        //DialogItem(drawable1, getString(R.string.hidden_menus), drawable2),
+
         val dialogItems = arrayOf(
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_power_24dp)!!, getString(R.string.hard_shutdown)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_restart_24dp)!!, getString(R.string.hard_reboot)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_safe_mode_24dp)!!, getString(R.string.reboot_to_safe_mode)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_window_24dp)!!, getString(R.string.recents)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_panorama_24dp)!!, getString(R.string.screensaver)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_screenshot_24dp)!!, getString(R.string.screenshot)),
-            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_disabled_visible_24dp)!!, getString(R.string.hidden_menus)),
-            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back))
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_forward_24dp)!!, getString(R.string.hidden_menus))
         )
 
         val adapter = DialogAdapter(this, dialogItems)
 
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.more)
-            .setIcon(R.drawable.ic_replay_24dp)
+            .setIcon(R.drawable.ic_forward_24dp)
             .setAdapter(adapter) { _, which ->
                 when (which) {
-                    0 -> hardShutdownCommand()
-                    1 -> hardRebootCommand()
-                    2 -> warningDialog()
-                    3 -> recentsCommand()
-                    4 -> screensaverCommand()
-                    5 -> screenshotCommand()
-                    6 -> {
-                        isDialogReopened = true
-                        showHiddenOptionsDialog()
-                    }
-                    7 -> {
+                    0 -> {
                         isDialogReopened = true
                         showMainOptionsDialog()
+                    }
+                    1 -> hardShutdownCommand()
+                    2 -> hardRebootCommand()
+                    3 -> warningDialog()
+                    4 -> recentsCommand()
+                    5 -> screensaverCommand()
+                    6 -> screenshotCommand()
+                    7 -> {
+                        isDialogReopened = true
+                        showHiddenOptionsDialog()
                     }
                 }
             }
@@ -125,6 +133,7 @@ class DialogActivity : AppCompatActivity() {
 
     private fun showHiddenOptionsDialog() {
         val dialogItems = arrayOf(
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.default_apps)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.standard_launcher)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.edid_information)),
@@ -135,32 +144,31 @@ class DialogActivity : AppCompatActivity() {
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.advanced_hdmi_cec_settings)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.sound_locate_setting)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.dessert_case_easter_egg)),
-            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.marshmallow_land_easter_egg)),
-            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back))
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.marshmallow_land_easter_egg))
         )
 
         val adapter = DialogAdapter(this, dialogItems)
 
         MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.hidden_menus)
-            .setIcon(R.drawable.ic_replay_24dp)
+            .setTitle(R.string.hidden_menus_experimental)
+            .setIcon(R.drawable.ic_disabled_visible_24dp)
             .setAdapter(adapter) { _, which ->
                 when (which) {
-                    0 -> changeDefaultAppsCommand()
-                    1 -> changeLauncherCommand()
-                    2 -> edidCommand()
-                    3 -> drmCommand()
-                    4 -> extendedSoundCommand()
-                    5 -> moreExtendedSoundCommand()
-                    6 -> advancedOptionsCommand()
-                    7 -> hdmiCECSettingsCommand()
-                    8 -> soundLocateSettingsCommand()
-                    9 -> easterEggDessertCaseCommand()
-                    10 -> easterEggMarshmallowLandCommand()
-                    11 -> {
+                    0 -> {
                         isDialogReopened = true
                         showMoreOptionsDialog()
                     }
+                    1 -> changeDefaultAppsCommand()
+                    2 -> changeLauncherCommand()
+                    3 -> edidCommand()
+                    4 -> drmCommand()
+                    5 -> extendedSoundCommand()
+                    6 -> moreExtendedSoundCommand()
+                    7 -> advancedOptionsCommand()
+                    8 -> hdmiCECSettingsCommand()
+                    9 -> soundLocateSettingsCommand()
+                    10 -> easterEggDessertCaseCommand()
+                    11 -> easterEggMarshmallowLandCommand()
                 }
             }
             .setOnDismissListener {
@@ -582,7 +590,7 @@ class DialogActivity : AppCompatActivity() {
         }
     }
 
-    data class DialogItem(val icon: Drawable, val text: String)
+    data class DialogItem(val icon: Drawable, val text: String, val icon1: Drawable? = null)
 
     class DialogAdapter(context: Context, private val items: Array<DialogItem>) :
         ArrayAdapter<DialogItem>(context, android.R.layout.select_dialog_item, items) {
@@ -601,6 +609,10 @@ class DialogActivity : AppCompatActivity() {
                 view.findViewById<View>(R.id.divider).visibility = View.VISIBLE
             } else {
                 view.findViewById<View>(R.id.divider).visibility = View.GONE
+            }
+
+            item.icon1?.let {
+                textView.setCompoundDrawablesWithIntrinsicBounds(item.icon1, null, it, null)
             }
 
             return view
