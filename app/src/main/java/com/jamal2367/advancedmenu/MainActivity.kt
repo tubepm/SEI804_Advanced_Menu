@@ -1,4 +1,4 @@
-package com.jamal2367.advancedreboot
+package com.jamal2367.advancedmenu
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
@@ -11,7 +11,7 @@ import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import android.widget.Toast
 import androidx.preference.PreferenceManager
-import com.jamal2367.advancedreboot.MainActivity.ThreadUtil.runOnUiThread
+import com.jamal2367.advancedmenu.MainActivity.ThreadUtil.runOnUiThread
 
 class MainActivity : AccessibilityService(), SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var sharedPreferences: SharedPreferences

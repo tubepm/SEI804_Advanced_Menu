@@ -5,5 +5,5 @@
     android:canRequestFilterKeyEvents="true"
     android:canRetrieveWindowContent="true"
     android:notificationTimeout="100"
-    android:packageNames="com.jamal2367.advancedreboot"
-    android:settingsActivity="com.jamal2367.advancedreboot.SettingsActivity" />
+    android:packageNames="com.jamal2367.advancedmenu"
+    android:settingsActivity="com.jamal2367.advancedmenu.SettingsActivity" />

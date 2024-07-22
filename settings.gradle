@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Advanced Reboot-TV"
+rootProject.name = "Advanced Menu-TV"
 include ':app'

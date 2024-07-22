@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">SEI804 Advanced Reboot</string>
+    <string name="app_name" translatable="false">SEI804 Advanced Menu</string>
     <string name="settings">Settings</string>
     <string name="about">About</string>
     <string name="button">Select button</string>

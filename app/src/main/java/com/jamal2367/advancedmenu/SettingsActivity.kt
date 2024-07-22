@@ -1,4 +1,4 @@
-package com.jamal2367.advancedreboot
+package com.jamal2367.advancedmenu
 
 import android.os.Bundle
 import android.widget.Toast
@@ -23,7 +23,7 @@ class SettingsActivity : AppCompatActivity() {
             val versionName = packageInfo.versionName
 
             preferenceAppVersion?.title = getString(R.string.app_name) + " $versionName"
-            preferenceAppVersion?.summary = "https://github.com/jamal2362/SEI804_Advanced_Reboot"
+            preferenceAppVersion?.summary = "https://github.com/jamal2362/SEI804_Advanced_Menu"
             preferenceAppVersion?.setIcon(R.drawable.ic_info_24dp)
             preferenceAppVersion?.setOnPreferenceClickListener {
                 Toast.makeText(requireContext(), "❤", Toast.LENGTH_LONG).show()

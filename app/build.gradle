@@ -4,17 +4,17 @@ plugins {
 }
 
 android {
-    namespace 'com.jamal2367.advancedreboot'
+    namespace 'com.jamal2367.advancedmenu'
     compileSdk 34
 
     defaultConfig {
-        applicationId 'com.jamal2367.advancedreboot'
+        applicationId 'com.jamal2367.advancedmenu'
         minSdk 31
         targetSdk 34
         versionCode 20
         versionName '2.0'
         resConfigs 'bg', 'en', 'de', 'hu', 'ru', 'uk'
-        setProperty('archivesBaseName', 'SEI804_Advanced_Reboot_' + versionName)
+        setProperty('archivesBaseName', 'SEI804_Advanced_Menu_' + versionName)
     }
 
     compileOptions {
