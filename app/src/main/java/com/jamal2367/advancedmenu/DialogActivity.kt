@@ -1,6 +1,7 @@
 package com.jamal2367.advancedmenu
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Base64
@@ -96,6 +97,7 @@ class DialogActivity : AppCompatActivity() {
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_window_24dp)!!, getString(R.string.recents)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_panorama_24dp)!!, getString(R.string.screensaver)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_screenshot_24dp)!!, getString(R.string.screenshot)),
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_forward_24dp)!!, getString(R.string.helper)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_forward_24dp)!!, getString(R.string.hidden_menus))
         )
 
@@ -117,6 +119,10 @@ class DialogActivity : AppCompatActivity() {
                     5 -> screensaverCommand()
                     6 -> screenshotCommand()
                     7 -> {
+                        isDialogReopened = true
+                        showHelperOptionsDialog()
+                    }
+                    8 -> {
                         isDialogReopened = true
                         showHiddenOptionsDialog()
                     }
@@ -167,6 +173,40 @@ class DialogActivity : AppCompatActivity() {
                     8 -> hdmiCECSettingsCommand()
                     9 -> easterEggDessertCaseCommand()
                     10 -> easterEggMarshmallowLandCommand()
+                }
+            }
+            .setOnDismissListener {
+                if (!isDialogReopened) {
+                    finish()
+                }
+                isDialogReopened = false
+            }
+            .show()
+    }
+
+    private fun showHelperOptionsDialog() {
+        val dialogItems = mutableListOf(
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back))
+        )
+
+        if (isAppInstalled()) {
+            dialogItems.add(DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.open_shikuzu)))
+            dialogItems.add(DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.start_shikuzu)))
+        }
+
+        val adapter = DialogAdapter(this, dialogItems.toTypedArray())
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.helper)
+            .setIcon(R.drawable.ic_helper_24dp)
+            .setAdapter(adapter) { _, which ->
+                when (which) {
+                    0 -> {
+                        isDialogReopened = true
+                        showMoreOptionsDialog()
+                    }
+                    1 -> openShikuzuCommand()
+                    2 -> startShikuzuCommand()
                 }
             }
             .setOnDismissListener {
@@ -408,6 +448,34 @@ class DialogActivity : AppCompatActivity() {
         }
     }
 
+    private fun openShikuzuCommand() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                connection?.open("shell:am start -n moe.shizuku.privileged.api/moe.shizuku.manager.MainActivity")
+                Log.d("TAG", "State: Shikuzu opened!")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun startShikuzuCommand() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                connection?.open("shell:sh /sdcard/Android/data/moe.shizuku.privileged.api/start.sh")
+
+                runOnUiThread {
+                    Toast.makeText(baseContext, "Shikuzu started!", Toast.LENGTH_SHORT).show()
+                }
+
+                Log.d("TAG", "State: Shikuzu started!")
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
     private fun changeDefaultAppsCommand() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -515,6 +583,17 @@ class DialogActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    private fun isAppInstalled(): Boolean {
+        val packageName = "moe.shizuku.privileged.api"
+
+        return try {
+            packageManager.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES)
+            true
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
         }
     }
 

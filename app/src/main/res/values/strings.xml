@@ -20,6 +20,9 @@
     <string name="recents">Recents</string>
     <string name="screensaver">Screensaver</string>
     <string name="screenshot">Screenshot</string>
+    <string name="helper">Helper…</string>
+    <string name="open_shikuzu">Open Shikuzu</string>
+    <string name="start_shikuzu">Start Shikuzu</string>
     <string name="hidden_menus">Hidden menus…</string>
     <string name="hidden_menus_experimental">Hidden menus (experimental)</string>
     <string name="default_apps">Default Apps</string>

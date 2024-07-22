@@ -19,6 +19,9 @@
     <string name="recents">Zuletzt verwendete Anwendungen</string>
     <string name="screensaver">Bildschirmschoner</string>
     <string name="screenshot">Bildschirmfoto</string>
+    <string name="helper">Helfer…</string>
+    <string name="open_shikuzu">Shikuzu öffnen</string>
+    <string name="start_shikuzu">Shikuzu starten</string>
     <string name="hidden_menus">Versteckte Menüs…</string>
     <string name="hidden_menus_experimental">Versteckte Menüs (experimentell)</string>
     <string name="default_apps">Standard Apps</string>
