@@ -27,7 +27,7 @@
     <string name="shizuku_is_not_installed">Shizuku ist nicht installiert!</string>
     <string name="open_shizuku">Shizuku öffnen</string>
     <string name="start_shizuku">Shizuku starten</string>
-    <string name="shikuzu_started">Shikuzu gestartet…</string>
+    <string name="shizuku_started">Shizuku gestartet…</string>
     <string name="uninstall_shizuku">Shizuku deinstallieren</string>
     <string name="shizuku_uninstalled">Shizuku deinstalliert…</string>
     <string name="hidden_menus">Versteckte Menüs…</string>

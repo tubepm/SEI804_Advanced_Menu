@@ -27,7 +27,7 @@
     <string name="shizuku_is_not_installed">Shizuku не встановлено!</string>
     <string name="open_shizuku">Відкрити Shizuku</string>
     <string name="start_shizuku">Запустити Shizuku</string>
-    <string name="shikuzu_started">Запуск Shikuzu…</string>
+    <string name="shizuku_started">Запуск Shizuku…</string>
     <string name="uninstall_shizuku">Видалити Shizuku</string>
     <string name="shizuku_uninstalled">Видалення Shizuku…</string>
     <string name="hidden_menus">Приховані меню…</string>

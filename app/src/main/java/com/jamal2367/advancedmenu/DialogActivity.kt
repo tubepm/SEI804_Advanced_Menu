@@ -667,7 +667,7 @@ class DialogActivity : AppCompatActivity() {
                 connection?.open("shell:sh /sdcard/Android/data/moe.shizuku.privileged.api/start.sh")
 
                 runOnUiThread {
-                    Toast.makeText(baseContext, getString(R.string.shikuzu_started), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(baseContext, getString(R.string.shizuku_started), Toast.LENGTH_SHORT).show()
                 }
 
                 Log.d("TAG", "State: Shizuku started!")
