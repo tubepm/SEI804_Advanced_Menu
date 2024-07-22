@@ -97,7 +97,7 @@ class DialogActivity : AppCompatActivity() {
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_window_24dp)!!, getString(R.string.recents)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_panorama_24dp)!!, getString(R.string.screensaver)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_screenshot_24dp)!!, getString(R.string.screenshot)),
-            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_forward_24dp)!!, getString(R.string.helper)),
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_shizuku_24dp)!!, getString(R.string.shizuku)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_forward_24dp)!!, getString(R.string.hidden_menus))
         )
 
@@ -119,8 +119,12 @@ class DialogActivity : AppCompatActivity() {
                     5 -> screensaverCommand()
                     6 -> screenshotCommand()
                     7 -> {
-                        isDialogReopened = true
-                        showHelperOptionsDialog()
+                        if (isAppInstalled()) {
+                            isDialogReopened = true
+                            showShizukuOptionsDialog()
+                        } else {
+                            shizukuNotInstalledDialog()
+                        }
                     }
                     8 -> {
                         isDialogReopened = true
@@ -184,20 +188,17 @@ class DialogActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun showHelperOptionsDialog() {
-        val dialogItems = mutableListOf(
-            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back))
+    private fun showShizukuOptionsDialog() {
+        val dialogItems = arrayOf(
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back)),
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.open_shizuku)),
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.start_shizuku))
         )
 
-        if (isAppInstalled()) {
-            dialogItems.add(DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.open_shikuzu)))
-            dialogItems.add(DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.start_shikuzu)))
-        }
-
-        val adapter = DialogAdapter(this, dialogItems.toTypedArray())
+        val adapter = DialogAdapter(this, dialogItems)
 
         MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.helper)
+            .setTitle(R.string.shizuku)
             .setIcon(R.drawable.ic_helper_24dp)
             .setAdapter(adapter) { _, which ->
                 when (which) {
@@ -205,8 +206,8 @@ class DialogActivity : AppCompatActivity() {
                         isDialogReopened = true
                         showMoreOptionsDialog()
                     }
-                    1 -> openShikuzuCommand()
-                    2 -> startShikuzuCommand()
+                    1 -> openShizukuCommand()
+                    2 -> startShizukuCommand()
                 }
             }
             .setOnDismissListener {
@@ -228,6 +229,26 @@ class DialogActivity : AppCompatActivity() {
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 safeModeCommand()
             }
+            .setNegativeButton(android.R.string.cancel) { _, _ ->
+                isDialogReopened = true
+                showMoreOptionsDialog()
+            }
+            .setOnDismissListener {
+                if (!isDialogReopened) {
+                    finish()
+                }
+                isDialogReopened = false
+            }
+            .show()
+    }
+
+    private fun shizukuNotInstalledDialog() {
+        isDialogReopened = true
+
+        MaterialAlertDialogBuilder(this)
+
+            .setMessage(R.string.shizuku_is_not_installed)
+            .setIcon(R.drawable.ic_warning_24dp)
             .setNegativeButton(android.R.string.cancel) { _, _ ->
                 isDialogReopened = true
                 showMoreOptionsDialog()
@@ -448,18 +469,18 @@ class DialogActivity : AppCompatActivity() {
         }
     }
 
-    private fun openShikuzuCommand() {
+    private fun openShizukuCommand() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 connection?.open("shell:am start -n moe.shizuku.privileged.api/moe.shizuku.manager.MainActivity")
-                Log.d("TAG", "State: Shikuzu opened!")
+                Log.d("TAG", "State: Shizuku opened!")
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
 
-    private fun startShikuzuCommand() {
+    private fun startShizukuCommand() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 connection?.open("shell:sh /sdcard/Android/data/moe.shizuku.privileged.api/start.sh")
@@ -468,7 +489,7 @@ class DialogActivity : AppCompatActivity() {
                     Toast.makeText(baseContext, "Shikuzu started!", Toast.LENGTH_SHORT).show()
                 }
 
-                Log.d("TAG", "State: Shikuzu started!")
+                Log.d("TAG", "State: Shizuku started!")
 
             } catch (e: Exception) {
                 e.printStackTrace()
