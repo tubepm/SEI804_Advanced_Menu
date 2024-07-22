@@ -21,7 +21,7 @@
     <string name="screensaver">Screensaver</string>
     <string name="screenshot">Screenshot</string>
     <string name="helper">Helper…</string>
-    <string name="shizuku" translatable="false">Shizuku…</string>
+    <string name="shizuku" translatable="false">Shizuku</string>
     <string name="shizuku_is_not_installed">Shizuku is not installed!</string>
     <string name="open_shizuku">Open Shizuku</string>
     <string name="start_shizuku">Start Shizuku</string>

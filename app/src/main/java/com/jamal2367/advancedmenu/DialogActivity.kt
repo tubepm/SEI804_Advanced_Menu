@@ -42,10 +42,18 @@ class DialogActivity : AppCompatActivity() {
     }
 
     private fun showMainOptionsDialog() {
+        val shutdown = AppCompatResources.getDrawable(this, R.drawable.ic_power_24dp)!!
+        val restart = AppCompatResources.getDrawable(this, R.drawable.ic_restart_24dp)!!
+        val forward = AppCompatResources.getDrawable(this, R.drawable.ic_forward_24dp)!!
+
+        shutdown.setBounds(0, 0, shutdown.intrinsicWidth, shutdown.intrinsicHeight)
+        restart.setBounds(0, 0, restart.intrinsicWidth, restart.intrinsicHeight)
+        forward.setBounds(0, 0, forward.intrinsicWidth, forward.intrinsicHeight)
+
         val dialogItems = arrayOf(
-            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_power_24dp)!!, getString(R.string.shutdown)),
+            DialogItem(shutdown, getString(R.string.shutdown), forward),
+            DialogItem(restart, getString(R.string.reboot), forward),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_sleep_24dp)!!, getString(R.string.standby)),
-            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_restart_24dp)!!, getString(R.string.reboot)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_restore_24dp)!!, getString(R.string.recovery)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_fastboot_24dp)!!, getString(R.string.fastboot)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_coreelec_24dp)!!, getString(R.string.coreelec)),
@@ -59,9 +67,15 @@ class DialogActivity : AppCompatActivity() {
             .setIcon(R.drawable.ic_replay_24dp)
             .setAdapter(adapter) { _, which ->
                 when (which) {
-                    0 -> shutdownCommand()
-                    1 -> standbyCommand()
-                    2 -> rebootCommand()
+                    0 -> {
+                        isDialogReopened = true
+                        showShutdownOptionsDialog()
+                    }
+                    1 -> {
+                        isDialogReopened = true
+                        showRebootOptionsDialog()
+                    }
+                    2 -> standbyCommand()
                     3 -> recoveryCommand()
                     4 -> fastbootCommand()
                     5 -> ceCommand()
@@ -80,25 +94,86 @@ class DialogActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun showMoreOptionsDialog() {
-        //val drawable1 = AppCompatResources.getDrawable(this, R.drawable.ic_disabled_visible_24dp)!!
-        //val drawable2 = AppCompatResources.getDrawable(this, R.drawable.ic_forward_24dp)!!
-
-        //drawable1.setBounds(0, 0, drawable1.intrinsicWidth, drawable1.intrinsicHeight)
-        //drawable2.setBounds(0, 0, drawable2.intrinsicWidth, drawable2.intrinsicHeight)
-
-        //DialogItem(drawable1, getString(R.string.hidden_menus), drawable2),
-
+    private fun showShutdownOptionsDialog() {
         val dialogItems = arrayOf(
-            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back)),
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_power_24dp)!!, getString(R.string.shutdown)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_power_24dp)!!, getString(R.string.hard_shutdown)),
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back))
+        )
+
+        val adapter = DialogAdapter(this, dialogItems)
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.shutdown)
+            .setIcon(R.drawable.ic_power_24dp)
+            .setAdapter(adapter) { _, which ->
+                when (which) {
+                    0 -> shutdownCommand()
+                    1 -> hardShutdownCommand()
+                    2 -> {
+                        isDialogReopened = true
+                        showMainOptionsDialog()
+                    }
+                }
+            }
+            .setOnDismissListener {
+                if (!isDialogReopened) {
+                    finish()
+                }
+                isDialogReopened = false
+            }
+            .show()
+    }
+
+    private fun showRebootOptionsDialog() {
+        val dialogItems = arrayOf(
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_restart_24dp)!!, getString(R.string.reboot)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_restart_24dp)!!, getString(R.string.hard_reboot)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_safe_mode_24dp)!!, getString(R.string.reboot_to_safe_mode)),
+                    DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back))
+        )
+
+        val adapter = DialogAdapter(this, dialogItems)
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.reboot)
+            .setIcon(R.drawable.ic_restart_24dp)
+            .setAdapter(adapter) { _, which ->
+                when (which) {
+                    0 -> rebootCommand()
+                    1 -> hardRebootCommand()
+                    2 -> warningDialog()
+                    3 -> {
+                        isDialogReopened = true
+                        showMainOptionsDialog()
+                    }
+                }
+            }
+            .setOnDismissListener {
+                if (!isDialogReopened) {
+                    finish()
+                }
+                isDialogReopened = false
+            }
+            .show()
+    }
+
+    private fun showMoreOptionsDialog() {
+        val shizuku = AppCompatResources.getDrawable(this, R.drawable.ic_shizuku_24dp)!!
+        val hidden = AppCompatResources.getDrawable(this, R.drawable.ic_disabled_visible_24dp)!!
+        val forward = AppCompatResources.getDrawable(this, R.drawable.ic_forward_24dp)!!
+
+        shizuku.setBounds(0, 0, shizuku.intrinsicWidth, shizuku.intrinsicHeight)
+        hidden.setBounds(0, 0, hidden.intrinsicWidth, hidden.intrinsicHeight)
+        forward.setBounds(0, 0, forward.intrinsicWidth, forward.intrinsicHeight)
+
+        val dialogItems = arrayOf(
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_window_24dp)!!, getString(R.string.recents)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_panorama_24dp)!!, getString(R.string.screensaver)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_screenshot_24dp)!!, getString(R.string.screenshot)),
-            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_shizuku_24dp)!!, getString(R.string.shizuku)),
-            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_forward_24dp)!!, getString(R.string.hidden_menus))
+            DialogItem(shizuku, getString(R.string.shizuku), forward),
+            DialogItem(hidden, getString(R.string.hidden_menus), forward),
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back))
         )
 
         val adapter = DialogAdapter(this, dialogItems)
@@ -108,17 +183,10 @@ class DialogActivity : AppCompatActivity() {
             .setIcon(R.drawable.ic_forward_24dp)
             .setAdapter(adapter) { _, which ->
                 when (which) {
-                    0 -> {
-                        isDialogReopened = true
-                        showMainOptionsDialog()
-                    }
-                    1 -> hardShutdownCommand()
-                    2 -> hardRebootCommand()
-                    3 -> warningDialog()
-                    4 -> recentsCommand()
-                    5 -> screensaverCommand()
-                    6 -> screenshotCommand()
-                    7 -> {
+                    0 -> recentsCommand()
+                    1 -> screensaverCommand()
+                    2 -> screenshotCommand()
+                    3 -> {
                         if (isAppInstalled()) {
                             isDialogReopened = true
                             showShizukuOptionsDialog()
@@ -126,9 +194,13 @@ class DialogActivity : AppCompatActivity() {
                             shizukuNotInstalledDialog()
                         }
                     }
-                    8 -> {
+                    4 -> {
                         isDialogReopened = true
                         showHiddenOptionsDialog()
+                    }
+                    5 -> {
+                        isDialogReopened = true
+                        showMainOptionsDialog()
                     }
                 }
             }
@@ -143,7 +215,6 @@ class DialogActivity : AppCompatActivity() {
 
     private fun showHiddenOptionsDialog() {
         val dialogItems = arrayOf(
-            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.default_apps)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.standard_launcher)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.edid_information)),
@@ -153,7 +224,8 @@ class DialogActivity : AppCompatActivity() {
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.advanced_options)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.advanced_hdmi_cec_settings)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.dessert_case_easter_egg)),
-            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.marshmallow_land_easter_egg))
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.marshmallow_land_easter_egg)),
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back))
         )
 
         val adapter = DialogAdapter(this, dialogItems)
@@ -163,20 +235,20 @@ class DialogActivity : AppCompatActivity() {
             .setIcon(R.drawable.ic_disabled_visible_24dp)
             .setAdapter(adapter) { _, which ->
                 when (which) {
-                    0 -> {
+                    0 -> changeDefaultAppsCommand()
+                    1 -> changeLauncherCommand()
+                    2 -> edidCommand()
+                    3 -> drmCommand()
+                    4 -> extendedSoundCommand()
+                    5 -> moreExtendedSoundCommand()
+                    6 -> advancedOptionsCommand()
+                    7 -> hdmiCECSettingsCommand()
+                    8 -> easterEggDessertCaseCommand()
+                    9 -> easterEggMarshmallowLandCommand()
+                    10 -> {
                         isDialogReopened = true
                         showMoreOptionsDialog()
                     }
-                    1 -> changeDefaultAppsCommand()
-                    2 -> changeLauncherCommand()
-                    3 -> edidCommand()
-                    4 -> drmCommand()
-                    5 -> extendedSoundCommand()
-                    6 -> moreExtendedSoundCommand()
-                    7 -> advancedOptionsCommand()
-                    8 -> hdmiCECSettingsCommand()
-                    9 -> easterEggDessertCaseCommand()
-                    10 -> easterEggMarshmallowLandCommand()
                 }
             }
             .setOnDismissListener {
@@ -190,24 +262,24 @@ class DialogActivity : AppCompatActivity() {
 
     private fun showShizukuOptionsDialog() {
         val dialogItems = arrayOf(
-            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.open_shizuku)),
-            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.start_shizuku))
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.start_shizuku)),
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back))
         )
 
         val adapter = DialogAdapter(this, dialogItems)
 
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.shizuku)
-            .setIcon(R.drawable.ic_helper_24dp)
+            .setIcon(R.drawable.ic_shizuku_24dp)
             .setAdapter(adapter) { _, which ->
                 when (which) {
-                    0 -> {
+                    0 -> openShizukuCommand()
+                    1 -> startShizukuCommand()
+                    2 -> {
                         isDialogReopened = true
                         showMoreOptionsDialog()
                     }
-                    1 -> openShizukuCommand()
-                    2 -> startShizukuCommand()
                 }
             }
             .setOnDismissListener {
@@ -689,17 +761,13 @@ class DialogActivity : AppCompatActivity() {
             val item = items[position]
             val textView = view.findViewById<TextView>(R.id.text)
             textView.text = item.text
-            textView.setCompoundDrawablesWithIntrinsicBounds(item.icon, null, null, null)
+            textView.setCompoundDrawablesWithIntrinsicBounds(item.icon, null, item.icon1, null)
             textView.compoundDrawablePadding = 16
 
             if (position < items.size - 1) {
                 view.findViewById<View>(R.id.divider).visibility = View.VISIBLE
             } else {
                 view.findViewById<View>(R.id.divider).visibility = View.GONE
-            }
-
-            item.icon1?.let {
-                textView.setCompoundDrawablesWithIntrinsicBounds(item.icon1, null, it, null)
             }
 
             return view
