@@ -44,10 +44,12 @@ class DialogActivity : AppCompatActivity() {
     private fun showMainOptionsDialog() {
         val shutdown = AppCompatResources.getDrawable(this, R.drawable.ic_power_24dp)!!
         val restart = AppCompatResources.getDrawable(this, R.drawable.ic_restart_24dp)!!
+        val coreelec = AppCompatResources.getDrawable(this, R.drawable.ic_coreelec_24dp)!!
         val forward = AppCompatResources.getDrawable(this, R.drawable.ic_forward_24dp)!!
 
         shutdown.setBounds(0, 0, shutdown.intrinsicWidth, shutdown.intrinsicHeight)
         restart.setBounds(0, 0, restart.intrinsicWidth, restart.intrinsicHeight)
+        coreelec.setBounds(0, 0, coreelec.intrinsicWidth, coreelec.intrinsicHeight)
         forward.setBounds(0, 0, forward.intrinsicWidth, forward.intrinsicHeight)
 
         val dialogItems = arrayOf(
@@ -56,7 +58,7 @@ class DialogActivity : AppCompatActivity() {
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_sleep_24dp)!!, getString(R.string.standby)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_restore_24dp)!!, getString(R.string.recovery)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_fastboot_24dp)!!, getString(R.string.fastboot)),
-            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_coreelec_24dp)!!, getString(R.string.coreelec)),
+            DialogItem(coreelec, getString(R.string.coreelec), forward),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_forward_24dp)!!, getString(R.string.more))
         )
 
@@ -78,7 +80,10 @@ class DialogActivity : AppCompatActivity() {
                     2 -> standbyCommand()
                     3 -> recoveryCommand()
                     4 -> fastbootCommand()
-                    5 -> ceCommand()
+                    5 -> {
+                        isDialogReopened = true
+                        showCEOptionsDialog()
+                    }
                     6 -> {
                         isDialogReopened = true
                         showMoreOptionsDialog()
@@ -144,6 +149,37 @@ class DialogActivity : AppCompatActivity() {
                     1 -> hardRebootCommand()
                     2 -> warningDialog()
                     3 -> {
+                        isDialogReopened = true
+                        showMainOptionsDialog()
+                    }
+                }
+            }
+            .setOnDismissListener {
+                if (!isDialogReopened) {
+                    finish()
+                }
+                isDialogReopened = false
+            }
+            .show()
+    }
+
+    private fun showCEOptionsDialog() {
+        val dialogItems = arrayOf(
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_restart_24dp)!!, getString(R.string.reboot_to_ce)),
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_restart_24dp)!!, getString(R.string.first_reboot_ce)),
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back))
+        )
+
+        val adapter = DialogAdapter(this, dialogItems)
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.coreelec)
+            .setIcon(R.drawable.ic_coreelec_24dp)
+            .setAdapter(adapter) { _, which ->
+                when (which) {
+                    0 -> ceCommand()
+                    1 -> firstCECommand()
+                    2 -> {
                         isDialogReopened = true
                         showMainOptionsDialog()
                     }
@@ -433,6 +469,17 @@ class DialogActivity : AppCompatActivity() {
     }
 
     private fun ceCommand() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                connection?.open("shell:reboot")
+                Log.d("TAG", "State: CoreELEC!")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun firstCECommand() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 connection?.open("shell:reboot update")

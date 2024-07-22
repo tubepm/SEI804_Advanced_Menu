@@ -12,6 +12,8 @@
     <string name="recovery">Recovery</string>
     <string name="fastboot">Fastboot</string>
     <string name="coreelec">CoreELEC</string>
+    <string name="reboot_to_ce">Normaler Neustart</string>
+    <string name="first_reboot_ce">Erster Neustart</string>
     <string name="more">Mehr…</string>
     <string name="hard_shutdown">Hartes Ausschalten</string>
     <string name="hard_reboot">Hartes Neustarten</string>
