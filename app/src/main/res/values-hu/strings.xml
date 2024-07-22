@@ -21,6 +21,16 @@
     <string name="recents">Legutóbbiak</string>
     <string name="screensaver">Képernyővédő</string>
     <string name="screenshot">Képernyőkép</string>
+    <string name="tweaks">Finomhangolások</string>
+    <string name="clear_cache_of_all_apps">Az összes alkalmazás gyorsítótárának törlése</string>
+    <string name="speed_profile_for_all_apps">Az összes alkalmazás gyorsítása</string>
+    <string name="fix_set_android_volume_to_max">Fix: Állítsa be az Android hangerejét a max értékre</string>
+    <string name="shizuku_is_not_installed">A Shizuku nincs telepítve!</string>
+    <string name="open_shizuku">Shizuku megnyitása</string>
+    <string name="start_shizuku">Shizuku indítása</string>
+    <string name="shikuzu_started">Shikuzu elindult…</string>
+    <string name="uninstall_shizuku">Shizuku eltávolítása</string>
+    <string name="shizuku_uninstalled">Shizuku eltávolítva…</string>
     <string name="hidden_menus">Rejtett menük…</string>
     <string name="hidden_menus_experimental">Rejtett menük (kísérleti)</string>
     <string name="default_apps">Alapértelmezett alkalmazások</string>
