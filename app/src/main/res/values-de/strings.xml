@@ -21,10 +21,16 @@
     <string name="recents">Zuletzt verwendete Anwendungen</string>
     <string name="screensaver">Bildschirmschoner</string>
     <string name="screenshot">Bildschirmfoto</string>
-    <string name="helper">Helfer…</string>
+    <string name="tweaks">Optimierungen</string>
+    <string name="fix_set_android_volume_to_max">Fix: Android-Lautstärke auf Maximum einstellen</string>
+    <string name="clear_cache_of_all_apps">Cache aller Anwendungen löschen</string>
+    <string name="speed_profile_for_all_apps">Geschwindigkeitsprofil für alle Anwendungen aktivieren</string>
     <string name="shizuku_is_not_installed">Shizuku ist nicht installiert!</string>
     <string name="open_shizuku">Shizuku öffnen</string>
     <string name="start_shizuku">Shizuku starten</string>
+    <string name="shikuzu_started">Shikuzu gestartet…</string>
+    <string name="uninstall_shizuku">Shizuku deinstallieren</string>
+    <string name="shizuku_uninstalled">Shizuku deinstalliert…</string>
     <string name="hidden_menus">Versteckte Menüs…</string>
     <string name="hidden_menus_experimental">Versteckte Menüs (experimentell)</string>
     <string name="default_apps">Standard Apps</string>

@@ -195,10 +195,12 @@ class DialogActivity : AppCompatActivity() {
     }
 
     private fun showMoreOptionsDialog() {
+        val tweaks = AppCompatResources.getDrawable(this, R.drawable.ic_tweaks_24dp)!!
         val shizuku = AppCompatResources.getDrawable(this, R.drawable.ic_shizuku_24dp)!!
         val hidden = AppCompatResources.getDrawable(this, R.drawable.ic_disabled_visible_24dp)!!
         val forward = AppCompatResources.getDrawable(this, R.drawable.ic_forward_24dp)!!
 
+        tweaks.setBounds(0, 0, tweaks.intrinsicWidth, tweaks.intrinsicHeight)
         shizuku.setBounds(0, 0, shizuku.intrinsicWidth, shizuku.intrinsicHeight)
         hidden.setBounds(0, 0, hidden.intrinsicWidth, hidden.intrinsicHeight)
         forward.setBounds(0, 0, forward.intrinsicWidth, forward.intrinsicHeight)
@@ -207,6 +209,7 @@ class DialogActivity : AppCompatActivity() {
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_window_24dp)!!, getString(R.string.recents)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_panorama_24dp)!!, getString(R.string.screensaver)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_screenshot_24dp)!!, getString(R.string.screenshot)),
+            DialogItem(tweaks, getString(R.string.tweaks), forward),
             DialogItem(shizuku, getString(R.string.shizuku), forward),
             DialogItem(hidden, getString(R.string.hidden_menus), forward),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back))
@@ -223,6 +226,10 @@ class DialogActivity : AppCompatActivity() {
                     1 -> screensaverCommand()
                     2 -> screenshotCommand()
                     3 -> {
+                        isDialogReopened = true
+                        showTweaksOptionsDialog()
+                    }
+                    4 -> {
                         if (isAppInstalled()) {
                             isDialogReopened = true
                             showShizukuOptionsDialog()
@@ -230,11 +237,11 @@ class DialogActivity : AppCompatActivity() {
                             shizukuNotInstalledDialog()
                         }
                     }
-                    4 -> {
+                    5 -> {
                         isDialogReopened = true
                         showHiddenOptionsDialog()
                     }
-                    5 -> {
+                    6 -> {
                         isDialogReopened = true
                         showMainOptionsDialog()
                     }
@@ -296,10 +303,44 @@ class DialogActivity : AppCompatActivity() {
             .show()
     }
 
+    private fun showTweaksOptionsDialog() {
+        val dialogItems = arrayOf(
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_tweaks_24dp)!!, getString(R.string.clear_cache_of_all_apps)),
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_tweaks_24dp)!!, getString(R.string.speed_profile_for_all_apps)),
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_tweaks_24dp)!!, getString(R.string.fix_set_android_volume_to_max)),
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back))
+        )
+
+        val adapter = DialogAdapter(this, dialogItems)
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.tweaks)
+            .setIcon(R.drawable.ic_tweaks_24dp)
+            .setAdapter(adapter) { _, which ->
+                when (which) {
+                    0 -> clearCacheAllAppsCommand()
+                    1 -> speedProfileAllAppsCommand()
+                    2 -> volumeMaxCommand()
+                    3 -> {
+                        isDialogReopened = true
+                        showMoreOptionsDialog()
+                    }
+                }
+            }
+            .setOnDismissListener {
+                if (!isDialogReopened) {
+                    finish()
+                }
+                isDialogReopened = false
+            }
+            .show()
+    }
+
     private fun showShizukuOptionsDialog() {
         val dialogItems = arrayOf(
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.open_shizuku)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.start_shizuku)),
+            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_build_24dp)!!, getString(R.string.uninstall_shizuku)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back))
         )
 
@@ -312,7 +353,8 @@ class DialogActivity : AppCompatActivity() {
                 when (which) {
                     0 -> openShizukuCommand()
                     1 -> startShizukuCommand()
-                    2 -> {
+                    2 -> uninstallShizukuCommand()
+                    3 -> {
                         isDialogReopened = true
                         showMoreOptionsDialog()
                     }
@@ -588,6 +630,47 @@ class DialogActivity : AppCompatActivity() {
         }
     }
 
+    private fun clearCacheAllAppsCommand() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                connection?.open("shell:pm trim-caches 999999999999999999")
+                Log.d("TAG", "State: Cleared cache!")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun speedProfileAllAppsCommand() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                connection?.open("shell:cmd package compile -m speed-profile -a")
+                Log.d("TAG", "State: Speed Profile!")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun volumeMaxCommand() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                connection?.open("shell:settings put system volume_music_hdmi 25")
+                Log.d("TAG", "State: Volume Max!")
+
+                runOnUiThread {
+                    Toast.makeText(baseContext, getString(R.string.reboot) + "...", Toast.LENGTH_SHORT).show()
+                }
+
+                Thread.sleep(1000)
+                connection?.open("shell:reboot")
+                Log.d("TAG", "State: Reboot!")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
     private fun openShizukuCommand() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -605,7 +688,24 @@ class DialogActivity : AppCompatActivity() {
                 connection?.open("shell:sh /sdcard/Android/data/moe.shizuku.privileged.api/start.sh")
 
                 runOnUiThread {
-                    Toast.makeText(baseContext, "Shikuzu started!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(baseContext, getString(R.string.shikuzu_started), Toast.LENGTH_SHORT).show()
+                }
+
+                Log.d("TAG", "State: Shizuku started!")
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun uninstallShizukuCommand() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                connection?.open("shell:pm uninstall moe.shizuku.privileged.api")
+
+                runOnUiThread {
+                    Toast.makeText(baseContext, getString(R.string.shizuku_uninstalled), Toast.LENGTH_SHORT).show()
                 }
 
                 Log.d("TAG", "State: Shizuku started!")
