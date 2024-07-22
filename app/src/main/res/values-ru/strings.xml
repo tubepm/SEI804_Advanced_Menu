@@ -19,6 +19,17 @@
     <string name="recents">Недавно открытое</string>
     <string name="screensaver">Заставка</string>
     <string name="screenshot">Скриншот</string>
+    <string name="reboot_to_ce">Нормальный перезапуск</string>
+    <string name="first_reboot_ce">Первый перезапуск</string>
+    <string name="tweaks">Оптимизации</string>
+    <string name="speed_profile_for_all_apps">Активируйте профиль скорости для всех приложений</string>
+    <string name="fix_set_android_volume_to_max">Исправление: Установите максимальный уровень громкости для Android</string>
+    <string name="shizuku_is_not_installed">Shizuki не установлены!</string>
+    <string name="open_shizuku">Открыть Shizuku</string>
+    <string name="start_shizuku">Запустить…</string>
+    <string name="shikuzu_started">Shikuzu запущен…</string>
+    <string name="uninstall_shizuku">Удаление Shizuku</string>
+    <string name="shizuku_uninstalled">Shizuku деинсталлирован…</string>
     <string name="hidden_menus">Скрытое меню…</string>
     <string name="hidden_menus_experimental">Скрытое меню (эксперементальное)</string>
     <string name="default_apps">Приложения по умолчанию</string>
