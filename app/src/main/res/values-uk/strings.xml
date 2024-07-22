@@ -12,6 +12,8 @@
     <string name="recovery">Recovery</string>
     <string name="fastboot">Fastboot</string>
     <string name="coreelec">CoreELEC</string>
+    <string name="reboot_to_ce">Звичайне перезавантаження</string>
+    <string name="first_reboot_ce">Перше перезавантаження</string>
     <string name="more">Ще…</string>
     <string name="hard_shutdown">Жорстке вимкнення</string>
     <string name="hard_reboot">Жорстке перезавантаження</string>
