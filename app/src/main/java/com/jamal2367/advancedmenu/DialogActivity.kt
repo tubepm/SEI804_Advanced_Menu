@@ -662,7 +662,7 @@ class DialogActivity : AppCompatActivity() {
                     Toast.makeText(baseContext, getString(R.string.reboot) + "...", Toast.LENGTH_SHORT).show()
                 }
 
-                Thread.sleep(1000)
+                Thread.sleep(2000)
                 connection?.open("shell:reboot")
                 Log.d("TAG", "State: Reboot!")
             } catch (e: Exception) {
