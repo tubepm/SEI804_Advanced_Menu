@@ -633,7 +633,7 @@ class DialogActivity : AppCompatActivity() {
     private fun clearCacheAllAppsCommand() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                connection?.open("shell:pm trim-caches 999999999999999999")
+                connection?.open("""shell:pm list packages | sed 's/package://' | awk '!/^(com\.spocky\.projengmenu|com\.spauldhaliwal\.dispatch|org\.xbmc\.kodi|com\.nes\.tvbugtracker|com\.jamal2367\.advancedmenu|com\.jamal2367\.cputemperature|com\.jamal2367\.videoinfooverlay)${'$'}/ { system("pm clear --cache-only " ${'$'}0) }'""")
                 Log.d("TAG", "State: Cleared cache!")
             } catch (e: Exception) {
                 e.printStackTrace()
