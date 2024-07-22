@@ -22,7 +22,6 @@
     <string name="screensaver">Заставка</string>
     <string name="screenshot">Скріншот</string>
     <string name="tweaks">Твіки</string>
-    <string name="clear_cache_of_all_apps">Очистити кеш усіх додатків</string>
     <string name="speed_profile_for_all_apps">Увімкнути профіль швидкості для всіх додатків</string>
     <string name="fix_set_android_volume_to_max">Виправлення: встановити гучність Android на максимум</string>
     <string name="shizuku_is_not_installed">Shizuku не встановлено!</string>

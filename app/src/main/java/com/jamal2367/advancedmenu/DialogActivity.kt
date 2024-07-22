@@ -305,7 +305,6 @@ class DialogActivity : AppCompatActivity() {
 
     private fun showTweaksOptionsDialog() {
         val dialogItems = arrayOf(
-            DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_tweaks_24dp)!!, getString(R.string.clear_cache_of_all_apps)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_tweaks_24dp)!!, getString(R.string.speed_profile_for_all_apps)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_tweaks_24dp)!!, getString(R.string.fix_set_android_volume_to_max)),
             DialogItem(AppCompatResources.getDrawable(this, R.drawable.ic_back_24dp)!!, getString(R.string.back))
@@ -318,10 +317,9 @@ class DialogActivity : AppCompatActivity() {
             .setIcon(R.drawable.ic_tweaks_24dp)
             .setAdapter(adapter) { _, which ->
                 when (which) {
-                    0 -> clearCacheAllAppsCommand()
-                    1 -> speedProfileAllAppsCommand()
-                    2 -> volumeMaxCommand()
-                    3 -> {
+                    0 -> speedProfileAllAppsCommand()
+                    1 -> volumeMaxCommand()
+                    2 -> {
                         isDialogReopened = true
                         showMoreOptionsDialog()
                     }
@@ -624,17 +622,6 @@ class DialogActivity : AppCompatActivity() {
 
                 connection?.open("shell:input keyevent 120")
                 Log.d("TAG", "State: Screenshot!")
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    private fun clearCacheAllAppsCommand() {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                connection?.open("""shell:pm list packages | sed 's/package://' | awk '!/^(com\.spocky\.projengmenu|com\.spauldhaliwal\.dispatch|org\.xbmc\.kodi|com\.nes\.tvbugtracker|com\.jamal2367\.advancedmenu|com\.jamal2367\.cputemperature|com\.jamal2367\.videoinfooverlay)${'$'}/ { system("pm clear --cache-only " ${'$'}0) }'""")
-                Log.d("TAG", "State: Cleared cache!")
             } catch (e: Exception) {
                 e.printStackTrace()
             }

@@ -23,7 +23,6 @@
     <string name="screensaver">Screensaver</string>
     <string name="screenshot">Screenshot</string>
     <string name="tweaks">Tweaks</string>
-    <string name="clear_cache_of_all_apps">Clear cache of all apps</string>
     <string name="speed_profile_for_all_apps">Activate speed profile for all applications</string>
     <string name="fix_set_android_volume_to_max">Fix: Set Android Volume to Max</string>
     <string name="shizuku" translatable="false">Shizuku</string>
