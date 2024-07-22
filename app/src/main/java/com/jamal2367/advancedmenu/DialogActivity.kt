@@ -452,10 +452,7 @@ class DialogActivity : AppCompatActivity() {
             try {
                 connection?.open("shell:input keyevent 26")
                 Log.d("TAG", "State: Normal Standby!")
-
-                // Wait for 5 seconds
                 Thread.sleep(5000)
-
                 connection?.open("shell:svc power shutdown")
                 Log.d("TAG", "State: Normal Shutdown!")
             } catch (e: Exception) {
@@ -535,10 +532,7 @@ class DialogActivity : AppCompatActivity() {
             try {
                 connection?.open("shell:input keyevent 26")
                 Log.d("TAG", "State: Normal Standby!")
-
-                // Wait for 5 seconds
                 Thread.sleep(5000)
-
                 connection?.open("shell:reboot -p")
                 Log.d("TAG", "State: Hard Shutdown!")
             } catch (e: Exception) {
@@ -617,9 +611,7 @@ class DialogActivity : AppCompatActivity() {
     private fun screenshotCommand() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // Wait for 0.5 seconds
                 Thread.sleep(500)
-
                 connection?.open("shell:input keyevent 120")
                 Log.d("TAG", "State: Screenshot!")
             } catch (e: Exception) {
