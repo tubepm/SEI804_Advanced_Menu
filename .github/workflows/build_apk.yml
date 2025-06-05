@@ -19,8 +19,11 @@ jobs:
           echo "检查资源文件结构："
           ls -R app/src/main/res/
           
-          [ -f "app/src/main/res/values-cn/strings.xml" ] || (echo "❌ 中文资源文件不存在"; exit 1)
-          echo "文件内容前5行："
+          if [ ! -f "app/src/main/res/values-cn/strings.xml" ]; then
+            echo "❌ 中文资源文件不存在"
+            exit 1
+          fi
+          echo "✅ 找到中文资源文件，内容预览："
           head -n 5 app/src/main/res/values-cn/strings.xml
 
       - name: Set up JDK 17
@@ -29,10 +32,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: 'gradle'
-
-      # 设置 Android SDK（简化版）
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
 
       # 清理和权限设置
       - name: Prepare environment
@@ -44,23 +43,25 @@ jobs:
       - name: Build with debug info
         run: |
           ./gradlew assembleDebug --stacktrace --info
+          echo "检查中间资源文件："
           find app/build/intermediates/merged_res/debug/ -name "strings.xml" | xargs ls -la
 
-      # 资源验证
+      # 改进的资源验证步骤
       - name: Verify Chinese resources
         run: |
-          echo "APK完整资源列表："
-          unzip -l app/build/outputs/apk/debug/*.apk | grep values-
+          echo "===== APK资源列表 ====="
+          unzip -l app/build/outputs/apk/debug/*.apk | grep "values-" || echo "⚠️ 未找到任何values目录"
           
-          if unzip -p app/build/outputs/apk/debug/*.apk "res/values-cn/strings.xml" > /tmp/cn.xml; then
-            echo "✅ 中文资源内容："
+          echo "===== 尝试提取中文资源 ====="
+          if unzip -p app/build/outputs/apk/debug/*.apk "res/values-cn/strings.xml" > /tmp/cn.xml 2>/dev/null; then
+            echo "✅ 成功提取中文资源："
             cat /tmp/cn.xml
           else
             echo "❌ 错误：APK中未找到中文资源"
             echo "可能原因："
-            echo "1. 未在build.gradle中声明resConfigs"
-            echo "2. 文件命名/路径错误"
-            echo "3. 资源合并失败"
+            echo "1. 检查app/build.gradle是否包含: resConfigs 'cn'"
+            echo "2. 确认文件路径为: app/src/main/res/values-cn/strings.xml"
+            echo "3. 文件编码应为UTF-8无BOM"
             exit 1
           fi
 
