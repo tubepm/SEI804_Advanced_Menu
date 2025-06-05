@@ -30,6 +30,12 @@ jobs:
           distribution: 'temurin'
           cache: 'none'  # 禁用 Gradle 缓存以避免缓存问题
 
+      - name: Set up Android SDK
+        uses: actions/setup-android@v1
+        with:
+          android-version: '33'  # 根据项目需求选择合适的 Android 版本
+          android-tools: ["commandlinetools;33.0.0", "platform-tools"]
+
       # 新增：设置执行权限并清理缓存
       - name: Clean project
         run: |
