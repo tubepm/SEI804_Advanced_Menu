@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 新增：详细检查中文资源文件
+      # 检查中文资源文件
       - name: Validate Chinese Resource
         run: |
           echo "检查资源文件结构："
@@ -28,33 +28,32 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'none'  # 禁用 Gradle 缓存以避免缓存问题
+          cache: 'gradle'
 
+      # 设置 Android SDK（修正后的语法）
       - name: Set up Android SDK
-        uses: actions/setup-android@v1
+        uses: android-actions/setup-android@v2
         with:
-          android-version: '33'  # 根据项目需求选择合适的 Android 版本
-          android-tools: ["commandlinetools;33.0.0", "platform-tools"]
+          android-sdk-file: commandlinetools-linux-9477386_latest.zip
 
-      # 新增：设置执行权限并清理缓存
-      - name: Clean project
+      # 清理和权限设置
+      - name: Prepare environment
         run: |
-          chmod +x ./gradlew  # 设置脚本执行权限
+          chmod +x ./gradlew
           ./gradlew clean
 
+      # 构建和调试
       - name: Build with debug info
         run: |
           ./gradlew assembleDebug --stacktrace --info
-          # 检查中间资源
           find app/build/intermediates/merged_res/debug/ -name "strings.xml" | xargs ls -la
 
-      # 改进的资源检查
+      # 资源验证
       - name: Verify Chinese resources
         run: |
           echo "APK完整资源列表："
           unzip -l app/build/outputs/apk/debug/*.apk | grep values-
           
-          echo "尝试提取中文资源："
           if unzip -p app/build/outputs/apk/debug/*.apk "res/values-cn/strings.xml" > /tmp/cn.xml; then
             echo "✅ 中文资源内容："
             cat /tmp/cn.xml
@@ -67,6 +66,7 @@ jobs:
             exit 1
           fi
 
+      # 上传产物
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
