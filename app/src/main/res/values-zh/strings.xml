@@ -64,6 +64,8 @@
         <item>按钮8</item>
         <item>按钮9</item>
         <item>没有任何</item>
+        <item>字幕</item>
+        <item>通知</item>
     </string-array>
 
     <string-array name="key_codes">
@@ -85,5 +87,7 @@
         <item>15</item>
         <item>16</item>
         <item>17</item>
+        <item>18</item>
+        <item>19</item>
     </string-array>
 </resources>
