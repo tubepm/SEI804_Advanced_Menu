@@ -30,9 +30,10 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      # 新增：清理缓存
+      # 新增：设置执行权限并清理缓存
       - name: Clean project
         run: |
+          chmod +x ./gradlew  # 设置脚本执行权限
           ./gradlew clean
           rm -rf ~/.gradle/caches/
 
