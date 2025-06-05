@@ -83,23 +83,23 @@ class MainActivity : AccessibilityService(), SharedPreferences.OnSharedPreferenc
         standardKeyCode = when (index) {
             0 -> KeyEvent.KEYCODE_BOOKMARK
             1 -> KeyEvent.KEYCODE_GUIDE
-            2 -> KeyEvent.KEYCODE_PROG_RED
-            3 -> KeyEvent.KEYCODE_PROG_GREEN
-            4 -> KeyEvent.KEYCODE_PROG_YELLOW
-            5 -> KeyEvent.KEYCODE_PROG_BLUE
-            6 -> KeyEvent.KEYCODE_0
-            7 -> KeyEvent.KEYCODE_1
-            8 -> KeyEvent.KEYCODE_2
-            9 -> KeyEvent.KEYCODE_3
-            10 -> KeyEvent.KEYCODE_4
-            11 -> KeyEvent.KEYCODE_5
-            12 -> KeyEvent.KEYCODE_6
-            13 -> KeyEvent.KEYCODE_7
-            14 -> KeyEvent.KEYCODE_8
-            15 -> KeyEvent.KEYCODE_9
-            16 -> KeyEvent.KEYCODE_UNKNOWN
-            17 -> KeyEvent.KEYCODE_CAPTIONS
-            18 -> KeyEvent.KEYCODE_INFO
+            2 -> KeyEvent.KEYCODE_CAPTIONS
+            3 -> KeyEvent.KEYCODE_NOTIFICATION
+            4 -> KeyEvent.KEYCODE_PROG_RED
+            5 -> KeyEvent.KEYCODE_PROG_GREEN
+            6 -> KeyEvent.KEYCODE_PROG_YELLOW
+            7 -> KeyEvent.KEYCODE_PROG_BLUE
+            8 -> KeyEvent.KEYCODE_0
+            9 -> KeyEvent.KEYCODE_1
+            10 -> KeyEvent.KEYCODE_2
+            11 -> KeyEvent.KEYCODE_3
+            12 -> KeyEvent.KEYCODE_4
+            13 -> KeyEvent.KEYCODE_5
+            14 -> KeyEvent.KEYCODE_6
+            15 -> KeyEvent.KEYCODE_7
+            16 -> KeyEvent.KEYCODE_8
+            17 -> KeyEvent.KEYCODE_9
+            18 -> KeyEvent.KEYCODE_UNKNOWN
             else -> KeyEvent.KEYCODE_BOOKMARK
         }
 
