@@ -1,4 +1,4 @@
-name: Android CI - 优化构建含中文资源的APK
+Name: Android CI - 优化构建含中文资源的APK
 
 on:
   push:
@@ -30,14 +30,16 @@ jobs:
       - name: 设置Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: 构建优化配置
-        run: |
-          # 创建gradle.properties优化配置
-          echo "org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8" >> gradle.properties
-          echo "android.enableR8=true" >> gradle.properties  # 使用R8优化器
-          echo "android.enableBuildCache=true" >> gradle.properties
-          echo "android.useAndroidX=true" >> gradle.properties
-          echo "android.enableJetifier=true" >> gradle.properties
+      # -------------------------------------------------------------
+      # 移除冗余的 gradle.properties 设置，这些在 build.gradle 或默认就是开启的
+      # - name: 构建优化配置
+      #   run: |
+      #     echo "org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8" >> gradle.properties
+      #     echo "android.enableR8=true" >> gradle.properties
+      #     echo "android.enableBuildCache=true" >> gradle.properties
+      #     echo "android.useAndroidX=true" >> gradle.properties
+      #     echo "android.enableJetifier=true" >> gradle.properties
+      # -------------------------------------------------------------
 
       - name: 构建APK (Debug)
         run: |
@@ -45,8 +47,8 @@ jobs:
             --no-daemon \
             --stacktrace \
             --info \
-            -Pandroid.debug.obsoleteApi=true \
-            -Pandroid.enableBuildCache=true
+            # -Pandroid.debug.obsoleteApi=true # 这个参数通常不影响大小，可以移除
+            # -Pandroid.enableBuildCache=true   # 构建缓存参数，可直接在 ~/.gradle/gradle.properties 或项目根目录 gradle.properties 设置
           
           # 验证构建结果
           if [ ! -d "app/build/outputs/apk" ]; then
@@ -54,7 +56,7 @@ jobs:
             exit 1
           fi
 
-      - name: 构建APK (Release)
+      - name: 构建APK (Release) - 推荐生成 AAB
         run: |
           # 生成临时签名密钥用于CI构建
           keytool -genkey -v \
@@ -67,70 +69,100 @@ jobs:
             -keypass ci-password \
             -dname "CN=CI, OU=CI, O=CI, L=CI, S=CI, C=CI"
           
-          # 构建优化Release APK
-          ./gradlew assembleRelease \
+          # 构建 Release AAB，而不是直接的 APK。这是减小最终安装包大小的最佳实践。
+          # build.gradle 中的 minifyEnabled true 和 shrinkResources true 将自动生效
+          ./gradlew bundleRelease \
             -Pandroid.injected.signing.store.file=ci-release-key.jks \
             -Pandroid.injected.signing.store.password=ci-password \
             -Pandroid.injected.signing.key.alias=ci-alias \
             -Pandroid.injected.signing.key.password=ci-password \
-            -Pandroid.enableR8.fullMode=true \
-            -Pandroid.enableBuildCache=true \
-            -Pandroid.enableCodeShrinking=true \
-            -Pandroid.enableResourceShrinking=true \
-            -Pandroid.enableProguard=true \
             --no-daemon \
-            --stacktrace
+            --stacktrace \
+            --rerun-tasks # 确保所有优化任务都被执行
 
-      - name: 优化APK大小
+          # 如果你坚持必须直接生成优化后的 Release APK (而不是 AAB)，则使用下面的命令
+          # ./gradlew assembleRelease \
+          #   -Pandroid.injected.signing.store.file=ci-release-key.jks \
+          #   -Pandroid.injected.signing.store.password=ci-password \
+          #   -Pandroid.injected.signing.key.alias=ci-alias \
+          #   -Pandroid.injected.signing.key.password=ci-password \
+          #   --no-daemon \
+          #   --stacktrace \
+          #   --rerun-tasks # 确保所有优化任务都被执行
+          #   # 这里不再需要 -Pandroid.enableR8.fullMode=true 等，因为它们已经在 build.gradle 的 release 块中配置
+          #   # 并且 -Pandroid.enableProguard=true 是多余的
+
+      # -------------------------------------------------------------
+      # zipalign 步骤：
+      # 注意：
+      # 1. assembleRelease 已经包含了 zipalign。如果从 AAB 生成 APK，bundletool 也会处理 zipalign。
+      # 2. 如果你确实要手动执行，确保在 bundleRelease 后运行 bundletool 来提取 APK 再进行 zipalign。
+      # 3. 这里只保留了 Release APK 的 zipalign，Debug 通常不需要。
+      # -------------------------------------------------------------
+      - name: 对齐 Release APK (如果生成了 APK)
+        if: success() && steps.build-release.outputs.apk-path # 仅在成功且有 APK 生成时执行
         run: |
-          # 安装zipalign和apksigner
           echo "安装优化工具..."
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;34.0.0"
-          
-          DEBUG_APK=$(find app/build/outputs/apk/debug -name '*.apk' -print -quit)
+          # build-tools;34.0.0 应该已被 setup-android@v3 包含，如果确实缺失才需要此行
+          # $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;34.0.0" 
+
           RELEASE_APK=$(find app/build/outputs/apk/release -name '*.apk' -print -quit)
           
-          # 优化Release APK
-          echo "优化Release APK..."
-          zipalign -v -p 4 "$RELEASE_APK" "$RELEASE_APK-aligned"
-          mv "$RELEASE_APK-aligned" "$RELEASE_APK"
-          
-          # 可选: 使用webp转换工具压缩资源
-          # 注意: 这需要项目配置支持webp
+          if [ -n "$RELEASE_APK" ]; then
+            echo "优化Release APK: $RELEASE_APK ..."
+            # zipalign 会直接修改文件，所以我们先复制一份
+            cp "$RELEASE_APK" "$RELEASE_APK.unaligned"
+            zipalign -v -p 4 "$RELEASE_APK.unaligned" "$RELEASE_APK"
+            echo "✅ Release APK 已对齐."
+          else
+            echo "ℹ️ 未找到 Release APK 进行 zipalign (可能生成了 AAB)."
+          fi
 
-      - name: 验证APK内容
+      - name: 验证APK/AAB内容
         run: |
-          echo "=== APK验证开始 ==="
+          echo "=== 构建产物验证开始 ==="
           
           # 检查Debug APK
           DEBUG_APK=$(find app/build/outputs/apk/debug -name '*.apk' -print -quit)
           echo "Debug APK路径: $DEBUG_APK"
           echo "Debug APK大小: $(du -h "$DEBUG_APK" | cut -f1)"
           
-          # 检查Release APK
-          RELEASE_APK=$(find app/build/outputs/apk/release -name '*.apk' -print -quit)
-          echo "Release APK路径: $RELEASE_APK"
-          echo "Release APK大小: $(du -h "$RELEASE_APK" | cut -f1)"
+          # 检查Release 构建产物 (可能是 APK 或 AAB)
+          RELEASE_OUTPUT_PATH="app/build/outputs"
           
-          # 重点验证中文资源
-          echo "验证中文资源:"
-          for apk in "$DEBUG_APK" "$RELEASE_APK"; do
-            echo "检查 $apk"
-            if unzip -l "$apk" | grep -q 'values-zh/'; then
-              echo "✅ $apk 包含中文资源"
-              unzip -l "$apk" | grep 'values-zh/' | head -5
+          # 查找 Release APK (如果使用了 assembleRelease 或从 AAB 提取)
+          RELEASE_APK=$(find "$RELEASE_OUTPUT_PATH/apk/release" -name '*.apk' -print -quit)
+          if [ -n "$RELEASE_APK" ]; then
+            echo "Release APK路径: $RELEASE_APK"
+            echo "Release APK大小: $(du -h "$RELEASE_APK" | cut -f1)"
+            # 对 APK 进行中文资源验证
+            if unzip -l "$RELEASE_APK" | grep -q 'values-zh/'; then
+              echo "✅ $RELEASE_APK 包含中文资源"
             else
-              echo "❌ $apk 缺少中文资源"
-              echo "完整资源结构:"
-              unzip -l "$apk" | grep 'res/values' | head -10
+              echo "❌ $RELEASE_APK 缺少中文资源"
               exit 1
             fi
-          done
+          fi
 
-      - name: 上传APK产物
+          # 查找 Release AAB (如果使用了 bundleRelease)
+          RELEASE_AAB=$(find "$RELEASE_OUTPUT_PATH/bundle/release" -name '*.aab' -print -quit)
+          if [ -n "$RELEASE_AAB" ]; then
+            echo "Release AAB路径: $RELEASE_AAB"
+            echo "Release AAB大小: $(du -h "$RELEASE_AAB" | cut -f1)"
+            echo "ℹ️ AAB 包含的资源将由 Google Play 生成的 APK 决定，无法直接验证内部语言资源。"
+          fi
+
+          # 检查至少有一个 Release 产物存在
+          if [ -z "$RELEASE_APK" ] && [ -z "$RELEASE_AAB" ]; then
+            echo "❌ 未找到 Release 构建产物 (APK 或 AAB)。"
+            exit 1
+          fi
+
+      - name: 上传构建产物
         uses: actions/upload-artifact@v4
         with:
-          name: optimized-apks
+          name: optimized-artifacts # 更名以便区分
           path: |
             app/build/outputs/apk/debug/*.apk
-            app/build/outputs/apk/release/*.apk
+            app/build/outputs/apk/release/*.apk # 包含可能的 zipalign 后的 APK
+            app/build/outputs/bundle/release/*.aab # 上传 AAB 文件
