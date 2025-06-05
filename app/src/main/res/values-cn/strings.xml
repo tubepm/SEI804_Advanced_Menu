@@ -1,0 +1,89 @@
+<resources>
+    <string name="app_name" translatable="false">SEI804高级菜单</string>
+    <string name="settings">设置</string>
+    <string name="about">关于</string>
+    <string name="button">选择按钮</string>
+    <string name="button_summary">选择一个按钮打开对话框。</string>
+    <string name="enable_usb_debugging_first">在开发人员选项中首先启用USB调试</string>
+    <string name="not_press_button">此功能是实验性的！\ n \ n，在继续之前，有必要返回启动器。\ ndo如果您不在启动器中！\ n \ nafter按下“确定”按钮，请不要按遥控器上的任何按钮，因为这可能会导致故障。</string>
+    <string name="advanced_reboot">高级重新启动</string>
+    <string name="shutdown">关闭</string>
+    <string name="standby">支持</string>
+    <string name="reboot">重新启动</string>
+    <string name="recovery">恢复</string>
+    <string name="fastboot">FastBoot</string>
+    <string name="coreelec">Corelec</string>
+    <string name="reboot_to_ce">普通重新启动</string>
+    <string name="first_reboot_ce">首先重新启动</string>
+    <string name="more">更多的…</string>
+    <string name="hard_shutdown">硬关闭</string>
+    <string name="hard_reboot">硬重启</string>
+    <string name="reboot_to_safe_mode">重启（安全模式）</string>
+    <string name="recents">最近的</string>
+    <string name="screensaver">屏幕保护程序</string>
+    <string name="screenshot">截屏</string>
+    <string name="tweaks">调整</string>
+    <string name="speed_profile_for_all_apps">激活所有应用程序的速度配置文件</string>
+    <string name="fix_set_android_volume_to_max">修复：将Android音量设置为最大</string>
+    <string name="shizuku" translatable="false">Shizuku</string>
+    <string name="shizuku_is_not_installed">Shizuku尚未安装！</string>
+    <string name="open_shizuku">打开静脉</string>
+    <string name="start_shizuku">开始Shizuku</string>
+    <string name="shizuku_started">Shizuku开始...</string>
+    <string name="uninstall_shizuku">卸载Shizuku</string>
+    <string name="shizuku_uninstalled">Shizuku卸载…</string>
+    <string name="hidden_menus">隐藏的菜单…</string>
+    <string name="hidden_menus_experimental">隐藏菜单（实验）</string>
+    <string name="default_apps">默认应用程序</string>
+    <string name="standard_launcher">标准启动器</string>
+    <string name="edid_information">EDID信息</string>
+    <string name="drm_information">DRM信息</string>
+    <string name="extended_sound_settings">扩展声音设置</string>
+    <string name="more_extended_sound_settings">更扩展的声音设置</string>
+    <string name="advanced_options">高级选项</string>
+    <string name="advanced_hdmi_cec_settings">高级HDMI-CEC设置</string>
+    <string name="dessert_case_easter_egg">甜点盒（复活节彩蛋）</string>
+    <string name="marshmallow_land_easter_egg">棉花糖土地（复活节彩蛋）</string>
+    <string name="back">后退…</string>
+
+    <string-array name="key_code_labels">
+        <item>书签按钮</item>
+        <item>电视指南按钮</item>
+        <item>红色按钮</item>
+        <item>绿色按钮</item>
+        <item>黄色按钮</item>
+        <item>蓝色按钮</item>
+        <item>按钮0</item>
+        <item>按钮1</item>
+        <item>按钮2</item>
+        <item>按钮3</item>
+        <item>按钮4</item>
+        <item>按钮5</item>
+        <item>按钮6</item>
+        <item>按钮7</item>
+        <item>按钮8</item>
+        <item>按钮9</item>
+        <item>没有任何</item>
+    </string-array>
+
+    <string-array name="key_codes">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+    </string-array>
+</resources>
