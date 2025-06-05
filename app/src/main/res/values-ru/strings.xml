@@ -47,6 +47,8 @@
     <string-array name="key_code_labels">
         <item>Избранное</item>
         <item>Телегид</item>
+        <item>Субтитры</item>
+        <item>Уведомление</item>
         <item>Красная кнопка</item>
         <item>Зеленая кнопка</item>
         <item>Желтая кнопка</item>
