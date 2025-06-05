@@ -1,4 +1,4 @@
-name: Android CI - Build APK
+name: Android CI - Build APK with Chinese Resources
 
 on:
   push:
@@ -9,11 +9,24 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
+      # 1. 拉取代码
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2. 验证中文资源文件存在
+      - name: Verify Chinese resources
+        run: |
+          if [ ! -f "app/src/main/res/values-cn/strings.xml" ]; then
+            echo "❌ 错误：未找到 app/src/main/res/values-cn/strings.xml"
+            ls -R app/src/main/res/
+            exit 1
+          else
+            echo "✅ 找到中文资源文件："
+            cat app/src/main/res/values-cn/strings.xml
+          fi
+
+      # 3. 设置JDK环境
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -21,17 +34,31 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: Make gradlew executable
-        run: chmod +x gradlew
+      # 4. 清理并构建（强制重新生成资源）
+      - name: Clean and build
+        run: |
+          ./gradlew clean
+          ./gradlew assembleDebug --stacktrace --info
 
-      - name: Build APK
-        run: ./gradlew assembleDebug --stacktrace
+      # 5. 检查APK是否包含中文资源
+      - name: Check APK contains Chinese
+        run: |
+          unzip -p app/build/outputs/apk/debug/app-debug.apk res/values-cn/* > /tmp/cn-strings.xml
+          if [ -s "/tmp/cn-strings.xml" ]; then
+            echo "✅ APK中包含中文资源："
+            cat /tmp/cn-strings.xml
+          else
+            echo "❌ 错误：APK中未找到中文资源"
+            unzip -l app/build/outputs/apk/debug/app-debug.apk | grep values-
+            exit 1
+          fi
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4  # 必须使用v4
+      # 6. 上传构建产物
+      - name: Upload APK and reports
+        uses: actions/upload-artifact@v4
         with:
-          name: app-debug
+          name: apk-with-cn-resources
           path: |
             app/build/outputs/apk/debug/*.apk
-            app/build/outputs/apk/debug/output.json
+            app/build/reports/
           retention-days: 5
