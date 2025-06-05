@@ -6,15 +6,15 @@
     <string name="button_summary">选择一个按钮打开对话框。</string>
     <string name="enable_usb_debugging_first">在开发人员选项中首先启用USB调试</string>
     <string name="not_press_button">此功能是实验性的！\ n \ n，在继续之前，有必要返回启动器。\ ndo如果您不在启动器中！\ n \ nafter按下“确定”按钮，请不要按遥控器上的任何按钮，因为这可能会导致故障。</string>
-    <string name="advanced_reboot">高级重新启动</string>
-    <string name="shutdown">关闭</string>
-    <string name="standby">支持</string>
-    <string name="reboot">重新启动</string>
-    <string name="recovery">恢复</string>
+    <string name="advanced_reboot">高级重启</string>
+    <string name="shutdown">关机</string>
+    <string name="standby">待机</string>
+    <string name="reboot">重启</string>
+    <string name="recovery">Recovery</string>
     <string name="fastboot">FastBoot</string>
-    <string name="coreelec">Corelec</string>
-    <string name="reboot_to_ce">普通重新启动</string>
-    <string name="first_reboot_ce">首先重新启动</string>
+    <string name="coreelec">Coreelec</string>
+    <string name="reboot_to_ce">正常重启</string>
+    <string name="first_reboot_ce">首次重启</string>
     <string name="more">更多的…</string>
     <string name="hard_shutdown">硬关闭</string>
     <string name="hard_reboot">硬重启</string>
@@ -27,7 +27,7 @@
     <string name="fix_set_android_volume_to_max">修复：将Android音量设置为最大</string>
     <string name="shizuku" translatable="false">Shizuku</string>
     <string name="shizuku_is_not_installed">Shizuku尚未安装！</string>
-    <string name="open_shizuku">打开静脉</string>
+    <string name="open_shizuku">打开Shizuku</string>
     <string name="start_shizuku">开始Shizuku</string>
     <string name="shizuku_started">Shizuku开始...</string>
     <string name="uninstall_shizuku">卸载Shizuku</string>
@@ -47,25 +47,25 @@
     <string name="back">后退…</string>
 
     <string-array name="key_code_labels">
-        <item>书签按钮</item>
-        <item>电视指南按钮</item>
-        <item>红色按钮</item>
-        <item>绿色按钮</item>
-        <item>黄色按钮</item>
-        <item>蓝色按钮</item>
-        <item>按钮0</item>
-        <item>按钮1</item>
-        <item>按钮2</item>
-        <item>按钮3</item>
-        <item>按钮4</item>
-        <item>按钮5</item>
-        <item>按钮6</item>
-        <item>按钮7</item>
-        <item>按钮8</item>
-        <item>按钮9</item>
-        <item>没有任何</item>
-        <item>字幕</item>
-        <item>通知</item>
+        <item>书签按键</item>
+        <item>指南按键</item>
+        <item>字幕按键</item>
+        <item>通知按键</item>
+        <item>红色按键</item>
+        <item>绿色按键</item>
+        <item>黄色按键</item>
+        <item>蓝色按键</item>
+        <item>按键0</item>
+        <item>按键1</item>
+        <item>按键2</item>
+        <item>按键3</item>
+        <item>按键4</item>
+        <item>按键5</item>
+        <item>按键6</item>
+        <item>按键7</item>
+        <item>按键8</item>
+        <item>按键9</item>
+        <item>不设置</item>
     </string-array>
 
     <string-array name="key_codes">
