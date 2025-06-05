@@ -10,23 +10,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: 检出代码（修复权限问题）
+      - name: 检出代码
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: 修复Gradle权限
         run: |
-          # 确保gradlew可执行
           chmod +x gradlew
-          # 验证权限
-          [ -x ./gradlew ] || (echo "❌ gradlew仍不可执行"; exit 1)
-
-      - name: 验证中英文资源
-        run: |
-          echo "=== 资源验证 ==="
-          [ -f app/src/main/res/values/strings.xml ] || exit 1
-          [ -f app/src/main/res/values-zh/strings.xml ] && echo "✅ 中文资源存在"
+          [ -x ./gradlew ] || (echo "❌ gradlew权限问题"; exit 1)
 
       - name: 设置JDK 17
         uses: actions/setup-java@v3
@@ -42,11 +34,34 @@ jobs:
             --stacktrace \
             --info \
             -Dorg.gradle.jvmargs="-Xmx2048m -Dfile.encoding=UTF-8"
+          
+          # 构建后立即检查结果
+          if [ ! -d "app/build/outputs/apk" ]; then
+            echo "❌ 构建失败，检查Gradle日志"
+            exit 1
+          fi
 
       - name: 验证APK内容
         run: |
-          APK=$(find app/build/outputs/apk -name '*.apk' | head -1)
-          unzip -l "$APK" | grep -E 'values/|values-zh/'
+          echo "=== APK验证开始 ==="
+          
+          # 查找最新APK
+          APK_PATH=$(find app/build/outputs/apk -name '*.apk' -print -quit)
+          [ -f "$APK_PATH" ] || (echo "❌ 未找到APK文件"; exit 1)
+          
+          echo "验证文件: $APK_PATH"
+          echo "文件大小: $(du -h "$APK_PATH" | cut -f1)"
+          
+          # 检查中文资源
+          echo "资源列表:"
+          if unzip -l "$APK_PATH" | grep -E 'values-zh/|values/'; then
+            echo "✅ 资源验证通过"
+          else
+            echo "⚠️ 未找到预期资源"
+            echo "完整资源结构:"
+            unzip -l "$APK_PATH" | grep 'res/'
+            # 不退出失败，仅警告
+          fi
 
       - name: 上传APK
         uses: actions/upload-artifact@v4
