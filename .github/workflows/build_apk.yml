@@ -1,4 +1,4 @@
-name: Android CI - 构建含中文资源的APK
+name: Android CI - 优化构建含中文资源的APK（单DEX）
 
 on:
   push:
@@ -30,17 +30,45 @@ jobs:
       - name: 设置Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: 配置单DEX构建
+        run: |
+          # 创建gradle.properties优化配置
+          cat >> gradle.properties <<EOF
+          # 构建优化配置
+          org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+          android.enableR8=true
+          android.enableBuildCache=true
+          android.useAndroidX=true
+          android.enableJetifier=true
+          # 强制单DEX文件配置
+          android.dexOptions.jumboMode=true
+          android.defaults.buildfeatures.multidex=false
+          EOF
+
+          # 修改build.gradle确保单DEX
+          if [ -f "app/build.gradle" ]; then
+            sed -i '/defaultConfig {/a\        multiDexEnabled false' app/build.gradle
+          fi
+
       - name: 构建APK (Debug)
         run: |
           ./gradlew assembleDebug \
             --no-daemon \
             --stacktrace \
             --info \
-            -Dorg.gradle.jvmargs="-Xmx2048m -Dfile.encoding=UTF-8"
+            -Pandroid.debug.obsoleteApi=true \
+            -Pandroid.enableBuildCache=true
           
-          # 验证构建结果
-          if [ ! -d "app/build/outputs/apk" ]; then
-            echo "❌ 构建失败，检查Gradle日志"
+          # 验证构建结果和DEX文件数量
+          DEBUG_APK=$(find app/build/outputs/apk/debug -name '*.apk' -print -quit)
+          if [ ! -f "$DEBUG_APK" ]; then
+            echo "❌ Debug构建失败"
+            exit 1
+          fi
+          dex_count=$(unzip -l "$DEBUG_APK" | grep -c 'classes[0-9]*\.dex')
+          echo "Debug APK包含 $dex_count 个DEX文件"
+          if [ "$dex_count" -ne 1 ]; then
+            echo "❌ Debug APK应只包含1个DEX文件"
             exit 1
           fi
 
@@ -57,40 +85,69 @@ jobs:
             -keypass ci-password \
             -dname "CN=CI, OU=CI, O=CI, L=CI, S=CI, C=CI"
           
-          # 构建Release APK
+          # 构建优化Release APK（强制单DEX）
           ./gradlew assembleRelease \
             -Pandroid.injected.signing.store.file=ci-release-key.jks \
             -Pandroid.injected.signing.store.password=ci-password \
             -Pandroid.injected.signing.key.alias=ci-alias \
             -Pandroid.injected.signing.key.password=ci-password \
+            -Pandroid.enableR8.fullMode=true \
+            -Pandroid.enableBuildCache=true \
+            -Pandroid.enableCodeShrinking=true \
+            -Pandroid.enableResourceShrinking=true \
+            -Pandroid.enableProguard=true \
+            -Pandroid.dexing.useMaxNumberOfWorkers=true \
             --no-daemon \
             --stacktrace
+
+      - name: 验证DEX文件数量
+        run: |
+          RELEASE_APK=$(find app/build/outputs/apk/release -name '*.apk' -print -quit)
+          dex_count=$(unzip -l "$RELEASE_APK" | grep -c 'classes[0-9]*\.dex')
+          echo "Release APK包含 $dex_count 个DEX文件"
+          if [ "$dex_count" -ne 1 ]; then
+            echo "❌ Release APK应只包含1个DEX文件"
+            echo "可能原因："
+            echo "1. 方法数超过65536限制"
+            echo "2. 多DEX配置未被正确禁用"
+            echo "3. 依赖库过多"
+            echo "解决方案："
+            echo "1. 检查并减少方法数"
+            echo "2. 确保multiDexEnabled false"
+            echo "3. 使用ProGuard/R8进一步优化"
+            exit 1
+          fi
+
+      - name: 优化APK大小
+        run: |
+          echo "安装优化工具..."
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;34.0.0"
+          
+          RELEASE_APK=$(find app/build/outputs/apk/release -name '*.apk' -print -quit)
+          
+          # 优化Release APK
+          echo "优化Release APK..."
+          zipalign -v -p 4 "$RELEASE_APK" "$RELEASE_APK-aligned"
+          mv "$RELEASE_APK-aligned" "$RELEASE_APK"
+          
+          # 显示优化后大小
+          echo "优化后APK大小: $(du -h "$RELEASE_APK" | cut -f1)"
 
       - name: 验证APK内容
         run: |
           echo "=== APK验证开始 ==="
           
-          # 检查Debug APK
           DEBUG_APK=$(find app/build/outputs/apk/debug -name '*.apk' -print -quit)
-          echo "Debug APK路径: $DEBUG_APK"
-          echo "Debug APK大小: $(du -h "$DEBUG_APK" | cut -f1)"
-          
-          # 检查Release APK
           RELEASE_APK=$(find app/build/outputs/apk/release -name '*.apk' -print -quit)
-          echo "Release APK路径: $RELEASE_APK"
-          echo "Release APK大小: $(du -h "$RELEASE_APK" | cut -f1)"
           
-          # 重点验证中文资源
+          # 验证中文资源
           echo "验证中文资源:"
           for apk in "$DEBUG_APK" "$RELEASE_APK"; do
             echo "检查 $apk"
             if unzip -l "$apk" | grep -q 'values-zh/'; then
               echo "✅ $apk 包含中文资源"
-              unzip -l "$apk" | grep 'values-zh/' | head -5
             else
               echo "❌ $apk 缺少中文资源"
-              echo "完整资源结构:"
-              unzip -l "$apk" | grep 'res/values' | head -10
               exit 1
             fi
           done
@@ -98,7 +155,7 @@ jobs:
       - name: 上传APK产物
         uses: actions/upload-artifact@v4
         with:
-          name: built-apks
+          name: single-dex-apks
           path: |
             app/build/outputs/apk/debug/*.apk
             app/build/outputs/apk/release/*.apk
