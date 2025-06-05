@@ -47,6 +47,8 @@
     <string-array name="key_code_labels">
         <item>Bookmark Gomb</item>
         <item>TV-Guide Gomb</item>
+        <item>Feliratok</item>
+        <item>Értesítések</item>
         <item>Vörös Gomb</item>
         <item>Zöld Gomb</item>
         <item>Sárga Gomb</item>
