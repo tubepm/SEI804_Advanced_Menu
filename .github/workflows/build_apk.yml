@@ -27,7 +27,10 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: 构建APK
+      - name: 设置Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 构建APK (Debug)
         run: |
           ./gradlew assembleDebug \
             --no-daemon \
@@ -35,36 +38,67 @@ jobs:
             --info \
             -Dorg.gradle.jvmargs="-Xmx2048m -Dfile.encoding=UTF-8"
           
-          # 构建后立即检查结果
+          # 验证构建结果
           if [ ! -d "app/build/outputs/apk" ]; then
             echo "❌ 构建失败，检查Gradle日志"
             exit 1
           fi
 
+      - name: 构建APK (Release)
+        run: |
+          # 生成临时签名密钥用于CI构建
+          keytool -genkey -v \
+            -keystore ci-release-key.jks \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -alias ci-alias \
+            -storepass ci-password \
+            -keypass ci-password \
+            -dname "CN=CI, OU=CI, O=CI, L=CI, S=CI, C=CI"
+          
+          # 构建Release APK
+          ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file=ci-release-key.jks \
+            -Pandroid.injected.signing.store.password=ci-password \
+            -Pandroid.injected.signing.key.alias=ci-alias \
+            -Pandroid.injected.signing.key.password=ci-password \
+            --no-daemon \
+            --stacktrace
+
       - name: 验证APK内容
         run: |
           echo "=== APK验证开始 ==="
           
-          # 查找最新APK
-          APK_PATH=$(find app/build/outputs/apk -name '*.apk' -print -quit)
-          [ -f "$APK_PATH" ] || (echo "❌ 未找到APK文件"; exit 1)
+          # 检查Debug APK
+          DEBUG_APK=$(find app/build/outputs/apk/debug -name '*.apk' -print -quit)
+          echo "Debug APK路径: $DEBUG_APK"
+          echo "Debug APK大小: $(du -h "$DEBUG_APK" | cut -f1)"
           
-          echo "验证文件: $APK_PATH"
-          echo "文件大小: $(du -h "$APK_PATH" | cut -f1)"
+          # 检查Release APK
+          RELEASE_APK=$(find app/build/outputs/apk/release -name '*.apk' -print -quit)
+          echo "Release APK路径: $RELEASE_APK"
+          echo "Release APK大小: $(du -h "$RELEASE_APK" | cut -f1)"
           
-          # 检查中文资源
-          echo "资源列表:"
-          if unzip -l "$APK_PATH" | grep -E 'values-zh/|values/'; then
-            echo "✅ 资源验证通过"
-          else
-            echo "⚠️ 未找到预期资源"
-            echo "完整资源结构:"
-            unzip -l "$APK_PATH" | grep 'res/'
-            # 不退出失败，仅警告
-          fi
+          # 重点验证中文资源
+          echo "验证中文资源:"
+          for apk in "$DEBUG_APK" "$RELEASE_APK"; do
+            echo "检查 $apk"
+            if unzip -l "$apk" | grep -q 'values-zh/'; then
+              echo "✅ $apk 包含中文资源"
+              unzip -l "$apk" | grep 'values-zh/' | head -5
+            else
+              echo "❌ $apk 缺少中文资源"
+              echo "完整资源结构:"
+              unzip -l "$apk" | grep 'res/values' | head -10
+              exit 1
+            fi
+          done
 
-      - name: 上传APK
+      - name: 上传APK产物
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug
-          path: app/build/outputs/apk/**/*.apk
+          name: built-apks
+          path: |
+            app/build/outputs/apk/debug/*.apk
+            app/build/outputs/apk/release/*.apk
