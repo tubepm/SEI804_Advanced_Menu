@@ -13,64 +13,65 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 检查中文资源文件
-      - name: Validate Chinese Resource
+      # 详细资源验证
+      - name: Validate Resources
         run: |
-          echo "检查资源文件结构："
-          ls -R app/src/main/res/
+          echo "=== 验证资源文件 ==="
+          echo "当前目录: $(pwd)"
+          echo "资源目录结构:"
+          find app/src/main/res -type d | grep "values" || echo "⚠️ 未找到values目录"
           
-          if [ ! -f "app/src/main/res/values-cn/strings.xml" ]; then
-            echo "❌ 中文资源文件不存在"
+          CN_FILE="app/src/main/res/values-cn/strings.xml"
+          if [ -f "$CN_FILE" ]; then
+            echo "✅ 找到中文资源文件"
+            echo "文件编码: $(file -bi "$CN_FILE")"
+            echo "前5行内容:"
+            head -n 5 "$CN_FILE"
+          else
+            echo "❌ 错误：找不到 $CN_FILE"
+            echo "当前res目录内容:"
+            ls -la app/src/main/res/
             exit 1
           fi
-          echo "✅ 找到中文资源文件，内容预览："
-          head -n 5 app/src/main/res/values-cn/strings.xml
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'gradle'
 
-      # 清理和权限设置
-      - name: Prepare environment
+      # 彻底清理环境
+      - name: Clean environment
         run: |
-          chmod +x ./gradlew
           ./gradlew clean
+          rm -rf ~/.gradle/caches/
+          rm -rf app/build
 
-      # 构建和调试
-      - name: Build with debug info
+      # 构建并验证
+      - name: Build and Verify
         run: |
+          echo "=== 开始构建 ==="
           ./gradlew assembleDebug --stacktrace --info
-          echo "检查中间资源文件："
-          find app/build/intermediates/merged_res/debug/ -name "strings.xml" | xargs ls -la
-
-      # 改进的资源验证步骤
-      - name: Verify Chinese resources
-        run: |
-          echo "===== APK资源列表 ====="
-          unzip -l app/build/outputs/apk/debug/*.apk | grep "values-" || echo "⚠️ 未找到任何values目录"
           
-          echo "===== 尝试提取中文资源 ====="
-          if unzip -p app/build/outputs/apk/debug/*.apk "res/values-cn/strings.xml" > /tmp/cn.xml 2>/dev/null; then
-            echo "✅ 成功提取中文资源："
-            cat /tmp/cn.xml
+          echo "=== 检查APK内容 ==="
+          APK_PATH=$(ls app/build/outputs/apk/debug/*.apk | head -1)
+          
+          echo "APK中的values目录:"
+          unzip -l "$APK_PATH" | grep "values-" || echo "⚠️ 未找到values目录"
+          
+          echo "尝试提取中文资源:"
+          if unzip -p "$APK_PATH" "res/values-cn/strings.xml" > /tmp/cn.xml; then
+            echo "✅ 成功提取中文资源"
+            echo "资源文件大小: $(wc -l < /tmp/cn.xml) 行"
           else
-            echo "❌ 错误：APK中未找到中文资源"
-            echo "可能原因："
-            echo "1. 检查app/build.gradle是否包含: resConfigs 'cn'"
-            echo "2. 确认文件路径为: app/src/main/res/values-cn/strings.xml"
-            echo "3. 文件编码应为UTF-8无BOM"
+            echo "❌ 错误：无法提取中文资源"
+            echo "APK完整内容:"
+            unzip -l "$APK_PATH" | grep "res/"
             exit 1
           fi
 
-      # 上传产物
-      - name: Upload artifacts
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: apk-artifacts
-          path: |
-            app/build/outputs/apk/debug/*.apk
-            app/build/reports/
-          retention-days: 3
+          name: debug-apk
+          path: app/build/outputs/apk/debug/*.apk
