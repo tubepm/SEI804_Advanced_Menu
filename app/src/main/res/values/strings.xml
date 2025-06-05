@@ -65,7 +65,7 @@
         <item>Button 7</item>
         <item>Button 8</item>
         <item>Button 9</item>
-        <item>Noe</item>
+        <item>None</item>
     </string-array>
 
     <string-array name="key_codes">
