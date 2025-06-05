@@ -1,4 +1,4 @@
-name: Android CI - 优化构建含中文资源的APK
+name: Android CI - 构建含中文资源的APK
 
 on:
   push:
@@ -19,7 +19,6 @@ jobs:
         run: |
           chmod +x gradlew
           [ -x ./gradlew ] || (echo "❌ gradlew权限问题"; exit 1)
-
       - name: 设置JDK 17
         uses: actions/setup-java@v3
         with:
@@ -27,25 +26,20 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: 构建优化版APK
+      - name: 构建APK
         run: |
-          # 启用构建优化参数
           ./gradlew assembleDebug \
             --no-daemon \
             --stacktrace \
             --info \
-            -Dorg.gradle.jvmargs="-Xmx2048m -Dfile.encoding=UTF-8" \
-            -Pandroid.enableBuildCache=true \
-            -Pandroid.enableR8=true \
-            -Pandroid.enableResourceOptimizations=true
-
-          # 验证构建结果
+            -Dorg.gradle.jvmargs="-Xmx2048m -Dfile.encoding=UTF-8"
+          
+          # 构建后立即检查结果
           if [ ! -d "app/build/outputs/apk" ]; then
             echo "❌ 构建失败，检查Gradle日志"
             exit 1
           fi
-
-      - name: 验证APK内容与大小
+      - name: 验证APK内容
         run: |
           echo "=== APK验证开始 ==="
           
@@ -54,8 +48,7 @@ jobs:
           [ -f "$APK_PATH" ] || (echo "❌ 未找到APK文件"; exit 1)
           
           echo "验证文件: $APK_PATH"
-          APK_SIZE=$(du -h "$APK_PATH" | cut -f1)
-          echo "文件大小: $APK_SIZE"
+          echo "文件大小: $(du -h "$APK_PATH" | cut -f1)"
           
           # 检查中文资源
           echo "资源列表:"
@@ -65,48 +58,10 @@ jobs:
             echo "⚠️ 未找到预期资源"
             echo "完整资源结构:"
             unzip -l "$APK_PATH" | grep 'res/'
+            # 不退出失败，仅警告
           fi
-          
-          # 检查APK大小警告
-          APK_SIZE_KB=$(du -k "$APK_PATH" | cut -f1)
-          if [ "$APK_SIZE_KB" -gt 15000 ]; then
-            echo "⚠️ 警告: APK大小超过15MB ($APK_SIZE)，建议优化"
-            echo "优化建议:"
-            echo "1. 启用minifyEnabled和shrinkResources"
-            echo "2. 使用WebP格式替代PNG"
-            echo "3. 移除未使用的资源"
-          fi
-
-      - name: 上传APK产物
+      - name: 上传APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug-optimized
+          name: app-debug
           path: app/build/outputs/apk/**/*.apk
-          retention-days: 7
-
-      - name: APK大小报告
-        run: |
-          APK_PATH=$(find app/build/outputs/apk -name '*.apk' -print -quit)
-          echo "APK_SIZE=$(du -k "$APK_PATH" | cut -f1)" >> $GITHUB_ENV
-          echo "APK_HUMAN_SIZE=$(du -h "$APK_PATH" | cut -f1)" >> $GITHUB_ENV
-          
-      - name: 显示优化建议
-        if: env.APK_SIZE > 15000
-        run: |
-          echo "## APK大小优化建议" >> $GITHUB_STEP_SUMMARY
-          echo "当前APK大小: $APK_HUMAN_SIZE" >> $GITHUB_STEP_SUMMARY
-          echo "### 优化建议:" >> $GITHUB_STEP_SUMMARY
-          echo "1. 在build.gradle中启用以下配置:" >> $GITHUB_STEP_SUMMARY
-          echo '```groovy' >> $GITHUB_STEP_SUMMARY
-          echo 'android {' >> $GITHUB_STEP_SUMMARY
-          echo '    buildTypes {' >> $GITHUB_STEP_SUMMARY
-          echo '        debug {' >> $GITHUB_STEP_SUMMARY
-          echo '            minifyEnabled true' >> $GITHUB_STEP_SUMMARY
-          echo '            shrinkResources true' >> $GITHUB_STEP_SUMMARY
-          echo '            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"' >> $GITHUB_STEP_SUMMARY
-          echo '        }' >> $GITHUB_STEP_SUMMARY
-          echo '    }' >> $GITHUB_STEP_SUMMARY
-          echo '}' >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          echo "2. 使用Android Studio的'Analyze APK'功能检查大文件" >> $GITHUB_STEP_SUMMARY
-          echo "3. 考虑使用ABI分包减少安装包大小" >> $GITHUB_STEP_SUMMARY
