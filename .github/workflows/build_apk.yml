@@ -1,4 +1,4 @@
-name: Android CI - Build APK
+name: Android CI - Build APK with Chinese Resources
 
 on:
   push:
@@ -9,26 +9,20 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      # 1. 拉取代码
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. 安装 dos2unix 并修复 gradlew 权限（关键修复）
-      - name: Fix gradlew permissions
+      # 新增：详细检查中文资源文件
+      - name: Validate Chinese Resource
         run: |
-          # 安装 dos2unix（处理Windows换行符）
-          sudo apt-get update && sudo apt-get install -y dos2unix
+          echo "检查资源文件结构："
+          ls -R app/src/main/res/
           
-          # 转换换行符并设置权限
-          dos2unix gradlew
-          chmod +x gradlew
-          
-          # 验证权限
-          ls -l gradlew | grep -e '-rwxr' || (echo "❌ gradlew 权限设置失败"; exit 1)
+          [ -f "app/src/main/res/values-cn/strings.xml" ] || (echo "❌ 中文资源文件不存在"; exit 1)
+          echo "文件内容前5行："
+          head -n 5 app/src/main/res/values-cn/strings.xml
 
-      # 3. 设置 JDK 环境
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -36,23 +30,37 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      # 4. 构建前验证环境
-      - name: Validate environment
+      # 新增：清理缓存
+      - name: Clean project
         run: |
-          ./gradlew --version || (echo "❌ gradlew 执行测试失败"; exit 1)
+          ./gradlew clean
+          rm -rf ~/.gradle/caches/
 
-      # 5. 执行构建
-      - name: Build APK
+      - name: Build with debug info
         run: |
-          ./gradlew clean assembleDebug --stacktrace
+          ./gradlew assembleDebug --stacktrace --info
+          # 检查中间资源
+          find app/build/intermediates/merged_res/debug/ -name "strings.xml" | xargs ls -la
 
-      # 6. 检查中文资源
+      # 改进的资源检查
       - name: Verify Chinese resources
         run: |
-          unzip -l app/build/outputs/apk/debug/*.apk | grep values-cn/strings.xml || \
-            (echo "❌ 错误：APK中未找到中文资源"; exit 1)
+          echo "APK完整资源列表："
+          unzip -l app/build/outputs/apk/debug/*.apk | grep values-
+          
+          echo "尝试提取中文资源："
+          if unzip -p app/build/outputs/apk/debug/*.apk "res/values-cn/strings.xml" > /tmp/cn.xml; then
+            echo "✅ 中文资源内容："
+            cat /tmp/cn.xml
+          else
+            echo "❌ 错误：APK中未找到中文资源"
+            echo "可能原因："
+            echo "1. 未在build.gradle中声明resConfigs"
+            echo "2. 文件命名/路径错误"
+            echo "3. 资源合并失败"
+            exit 1
+          fi
 
-      # 7. 上传产物
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
