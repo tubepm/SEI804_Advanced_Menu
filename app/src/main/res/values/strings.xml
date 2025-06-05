@@ -48,7 +48,9 @@
 
     <string-array name="key_code_labels">
         <item>Bookmark button</item>
-        <item>TV Guide button</item>
+        <item>Guide button</item>
+        <item>CAPTIONS button</item>
+        <item>NOTIFICATION button</item>
         <item>Red button</item>
         <item>Green button</item>
         <item>Yellow button</item>
@@ -85,5 +87,7 @@
         <item>15</item>
         <item>16</item>
         <item>17</item>
+        <item>18</item>
+        <item>19</item>
     </string-array>
 </resources>
