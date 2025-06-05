@@ -11,20 +11,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. 拉取代码（注意子模块权限）
+      # 1. 拉取代码
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          submodules: recursive  # 如果有子模块需要添加
-          fetch-depth: 0        # 获取完整历史记录
 
-      # 2. 修复 gradlew 权限（关键修复）
+      # 2. 安装 dos2unix 并修复 gradlew 权限（关键修复）
       - name: Fix gradlew permissions
         run: |
-          # 确保文件使用 Unix 换行符
+          # 安装 dos2unix（处理Windows换行符）
+          sudo apt-get update && sudo apt-get install -y dos2unix
+          
+          # 转换换行符并设置权限
           dos2unix gradlew
-          # 显式设置权限
           chmod +x gradlew
+          
           # 验证权限
           ls -l gradlew | grep -e '-rwxr' || (echo "❌ gradlew 权限设置失败"; exit 1)
 
@@ -39,20 +39,20 @@ jobs:
       # 4. 构建前验证环境
       - name: Validate environment
         run: |
-          # 检查 Java 版本
-          java -version
-          # 检查 gradlew 可执行性
           ./gradlew --version || (echo "❌ gradlew 执行测试失败"; exit 1)
 
-      # 5. 执行构建（带资源验证）
-      - name: Build with resource check
+      # 5. 执行构建
+      - name: Build APK
         run: |
-          ./gradlew clean assembleDebug --stacktrace --scan
-          # 验证中文资源是否打包
+          ./gradlew clean assembleDebug --stacktrace
+
+      # 6. 检查中文资源
+      - name: Verify Chinese resources
+        run: |
           unzip -l app/build/outputs/apk/debug/*.apk | grep values-cn/strings.xml || \
             (echo "❌ 错误：APK中未找到中文资源"; exit 1)
 
-      # 6. 上传产物
+      # 7. 上传产物
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
