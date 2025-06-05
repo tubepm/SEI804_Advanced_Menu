@@ -1,77 +1,78 @@
-name: Android CI - Build APK with Chinese Resources
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      # 检查中文资源文件
-      - name: Validate Chinese Resource
-        run: |
-          echo "检查资源文件结构："
-          ls -R app/src/main/res/
+name: Android CI - Build APK with Chinese Resources 
+ 
+on: 
+  push: 
+    branches: [ main ] 
+  pull_request: 
+    branches: [ main ] 
+ 
+jobs: 
+  build: 
+    runs-on: ubuntu-latest 
+    steps: 
+      - name: Checkout code 
+        uses: actions/checkout@v4 
+ 
+      # 检查中文资源文件 
+      - name: Validate Chinese Resource 
+        run: | 
+          echo "检查资源文件结构：" 
+          ls -R app/src/main/res/ 
           
-          [ -f "app/src/main/res/values-cn/strings.xml" ] || (echo "❌ 中文资源文件不存在"; exit 1)
-          echo "文件内容前5行："
-          head -n 5 app/src/main/res/values-cn/strings.xml
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: 'gradle'
-
-      # 设置 Android SDK（修正后的语法）
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v2
-        with:
-          android-sdk-file: commandlinetools-linux-9477386_latest.zip
-
-      # 清理和权限设置
-      - name: Prepare environment
-        run: |
-          chmod +x ./gradlew
-          ./gradlew clean
-
-      # 构建和调试
-      - name: Build with debug info
-        run: |
-          ./gradlew assembleDebug --stacktrace --info
-          find app/build/intermediates/merged_res/debug/ -name "strings.xml" | xargs ls -la
-
-      # 资源验证
-      - name: Verify Chinese resources
-        run: |
-          echo "APK完整资源列表："
-          unzip -l app/build/outputs/apk/debug/*.apk | grep values-
+          [ -f "app/src/main/res/values-cn/strings.xml" ] || (echo "❌ 中文资源文件不存在"; exit 1) 
+          echo "文件内容前5行：" 
+          head -n 5 app/src/main/res/values-cn/strings.xml 
+ 
+      - name: Set up JDK 17 
+        uses: actions/setup-java@v3 
+        with: 
+          java-version: '17' 
+          distribution: 'temurin' 
+          cache: 'gradle' 
+ 
+      # Android 设置 SDK（修正后的语法） 
+      - name: Set up Android SDK 
+        uses: android-actions/setup-android@v2 
+        with: 
+          # 这里假设使用最新版本的 SDK，你可以根据需要修改 
+          sdk-version: latest 
+ 
+      # 清理和权限设置 
+      - name: Prepare environment 
+        run: | 
+          chmod +x ./gradlew 
+          ./gradlew clean 
+ 
+      # 构建和调试 
+      - name: Build with debug info 
+        run: | 
+          ./gradlew assembleDebug --stacktrace --info 
+          find app/build/intermediates/merged_res/debug/ -name "strings.xml" | xargs ls -la 
+ 
+      # 资源验证 
+      - name: Verify Chinese resources 
+        run: | 
+          echo "APK完整资源列表：" 
+          unzip -l app/build/outputs/apk/debug/*.apk | grep values- 
           
-          if unzip -p app/build/outputs/apk/debug/*.apk "res/values-cn/strings.xml" > /tmp/cn.xml; then
-            echo "✅ 中文资源内容："
-            cat /tmp/cn.xml
-          else
-            echo "❌ 错误：APK中未找到中文资源"
-            echo "可能原因："
-            echo "1. 未在build.gradle中声明resConfigs"
-            echo "2. 文件命名/路径错误"
-            echo "3. 资源合并失败"
-            exit 1
-          fi
-
-      # 上传产物
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: apk-artifacts
-          path: |
-            app/build/outputs/apk/debug/*.apk
-            app/build/reports/
+          if unzip -p app/build/outputs/apk/debug/*.apk "res/values-cn/strings.xml" > /tmp/cn.xml; then 
+            echo "✅ 中文资源内容：" 
+            cat /tmp/cn.xml 
+          else 
+            echo "❌ 错误：APK中未找到中文资源" 
+            echo "可能原因：" 
+            echo "1. 未在build.gradle中声明resConfigs" 
+            echo "2. 文件命名/路径错误" 
+            echo "3. 资源合并失败" 
+            exit 1 
+          fi 
+ 
+      # 上传产物 
+      - name: Upload artifacts 
+        uses: actions/upload-artifact@v4 
+        with: 
+          name: apk-artifacts 
+          path: | 
+            app/build/outputs/apk/debug/*.apk 
+            app/build/reports/ 
           retention-days: 3
