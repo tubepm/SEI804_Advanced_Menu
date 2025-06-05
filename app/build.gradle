@@ -13,7 +13,7 @@ android {
         targetSdk 34
         versionCode 30
         versionName '3.0'
-        resConfigs 'bg', 'en', 'de', 'hu', 'ru', 'uk'
+        resConfigs 'bg', 'en', 'de', 'hu', 'ru', 'uk', 'cn'
         setProperty('archivesBaseName', 'SEI804_Advanced_Menu_' + versionName)
     }
 
