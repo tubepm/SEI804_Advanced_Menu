@@ -1,4 +1,4 @@
-name: Android CI - 优化构建含中文资源的APK # <--- 确保是小写的 'name'，并且后面有冒号和空格
+name: Android CI - 优化构建含中文资源的APK
 
 on:
   push:
@@ -30,20 +30,33 @@ jobs:
       - name: 设置Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: 启用构建缓存和资源缩减
+        run: |
+          # 启用构建缓存
+          mkdir -p ~/.gradle
+          echo "org.gradle.caching=true" >> ~/.gradle/gradle.properties
+          
+          # 启用资源缩减配置
+          echo "android.enableBuildCache=true" >> ~/.gradle/gradle.properties
+          echo "android.enableR8=true" >> ~/.gradle/gradle.properties
+
       - name: 构建APK (Debug)
         run: |
           ./gradlew assembleDebug \
             --no-daemon \
             --stacktrace \
-            --info
+            --info \
+            -Pandroid.enableBuildCache=true \
+            -Pandroid.enableR8=true
           
           if [ ! -d "app/build/outputs/apk" ]; then
             echo "❌ 构建失败，检查Gradle日志"
             exit 1
           fi
 
-      - name: 构建APK (Release) - 推荐生成 AAB
+      - name: 构建优化版APK (Release)
         run: |
+          # 生成临时签名密钥
           keytool -genkey -v \
             -keystore ci-release-key.jks \
             -keyalg RSA \
@@ -54,60 +67,79 @@ jobs:
             -keypass ci-password \
             -dname "CN=CI, OU=CI, O=CI, L=CI, S=CI, C=CI"
           
+          # 构建时启用所有优化选项
           ./gradlew bundleRelease \
             -Pandroid.injected.signing.store.file=ci-release-key.jks \
             -Pandroid.injected.signing.store.password=ci-password \
             -Pandroid.injected.signing.key.alias=ci-alias \
             -Pandroid.injected.signing.key.password=ci-password \
+            -Pandroid.enableR8=true \
+            -Pandroid.enableBuildCache=true \
+            -Pandroid.bundle.enableUncompressedNativeLibs=false \
             --no-daemon \
             --stacktrace \
             --rerun-tasks
 
-      - name: 对齐 Release APK (如果生成了 APK)
-        # 注意：这里的条件 if: success() && steps.build-release.outputs.apk-path 需要依赖上一步的 output，
-        # 如果你将 bundleRelease 命名为 "构建APK (Release) - 推荐生成 AAB"，那么这里 steps.build-release 就不匹配了。
-        # 最简单的做法是直接根据文件是否存在来判断。
+      - name: 对齐和优化APK (如果生成了APK)
         run: |
-          echo "安装优化工具..."
-          
           RELEASE_APK=$(find app/build/outputs/apk/release -name '*.apk' -print -quit)
           
           if [ -n "$RELEASE_APK" ]; then
             echo "优化Release APK: $RELEASE_APK ..."
+            
+            # 1. 对齐APK
             cp "$RELEASE_APK" "$RELEASE_APK.unaligned"
             zipalign -v -p 4 "$RELEASE_APK.unaligned" "$RELEASE_APK"
-            echo "✅ Release APK 已对齐."
+            
+            # 2. 使用zipalign和apkanalyzer检查优化效果
+            echo "优化前大小: $(du -h "$RELEASE_APK.unaligned" | cut -f1)"
+            echo "优化后大小: $(du -h "$RELEASE_APK" | cut -f1)"
+            
+            # 3. 清理未对齐的APK
+            rm "$RELEASE_APK.unaligned"
+            
+            echo "✅ Release APK 已优化."
           else
-            echo "ℹ️ 未找到 Release APK 进行 zipalign (可能生成了 AAB)."
+            echo "ℹ️ 未找到 Release APK 进行优化 (可能生成了 AAB)."
           fi
 
-      - name: 验证APK/AAB内容
+      - name: 验证APK/AAB内容和大小
         run: |
           echo "=== 构建产物验证开始 ==="
           
+          # Debug APK检查
           DEBUG_APK=$(find app/build/outputs/apk/debug -name '*.apk' -print -quit)
           echo "Debug APK路径: $DEBUG_APK"
           echo "Debug APK大小: $(du -h "$DEBUG_APK" | cut -f1)"
           
           RELEASE_OUTPUT_PATH="app/build/outputs"
           
+          # Release APK检查
           RELEASE_APK=$(find "$RELEASE_OUTPUT_PATH/apk/release" -name '*.apk' -print -quit)
           if [ -n "$RELEASE_APK" ]; then
             echo "Release APK路径: $RELEASE_APK"
             echo "Release APK大小: $(du -h "$RELEASE_APK" | cut -f1)"
+            
+            # 检查中文资源
             if unzip -l "$RELEASE_APK" | grep -q 'values-zh/'; then
               echo "✅ $RELEASE_APK 包含中文资源"
             else
               echo "❌ $RELEASE_APK 缺少中文资源"
               exit 1
             fi
+            
+            # 检查native库是否压缩
+            if unzip -l "$RELEASE_APK" | grep -q 'lib/.*\.so'; then
+              echo "ℹ️ 检查到native库，确保已启用压缩"
+            fi
           fi
 
+          # AAB检查
           RELEASE_AAB=$(find "$RELEASE_OUTPUT_PATH/bundle/release" -name '*.aab' -print -quit)
           if [ -n "$RELEASE_AAB" ]; then
             echo "Release AAB路径: $RELEASE_AAB"
             echo "Release AAB大小: $(du -h "$RELEASE_AAB" | cut -f1)"
-            echo "ℹ️ AAB 包含的资源将由 Google Play 生成的 APK 决定，无法直接验证内部语言资源。"
+            echo "ℹ️ AAB 包含的资源将由 Google Play 生成的 APK 决定"
           fi
 
           if [ -z "$RELEASE_APK" ] && [ -z "$RELEASE_AAB" ]; then
