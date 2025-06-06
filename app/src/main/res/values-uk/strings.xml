@@ -47,8 +47,6 @@
     <string-array name="key_code_labels">
         <item>Кнопка Закладки</item>
         <item>Кнопка Телегід</item>
-        <item>Сповіщення</item>
-        <item>Субтитри</item>
         <item>Червона кнопка</item>
         <item>Зелена кнопка</item>
         <item>Жовта кнопка</item>
@@ -63,6 +61,7 @@
         <item>Кнопка 7</item>
         <item>Кнопка 8</item>
         <item>Кнопка 9</item>
+        <item>Кнопка *</item>
         <item>Немає</item>
     </string-array>
 
