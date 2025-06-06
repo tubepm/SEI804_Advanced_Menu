@@ -62,6 +62,7 @@
         <item>Бутон 8</item>
         <item>Бутон 9</item>
         <item>Бутон *</item>
+        <item>Бутон F5</item>
         <item>Нищо</item>
     </string-array>
 </resources>
