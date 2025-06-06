@@ -1,4 +1,4 @@
-name: Android CI
+name: Android CI - Release Build # 工作流名称，更清晰地表明其目的
 
 on:
   push:
@@ -18,27 +18,31 @@ jobs:
       uses: actions/setup-java@v4
       with:
         java-version: '17'
-        distribution: 'temurin' # 修正：使用 'temurin' 作为 Java 发行版
-        cache: 'gradle'
+        distribution: 'temurin'
+        cache: 'gradle' # 缓存 Gradle 依赖，加快构建速度
 
     - name: Grant execute permission to gradlew
       run: chmod +x gradlew
 
-    - name: Build Debug APK
-      run: ./gradlew assembleDebug
+    - name: Build Release APK
+      # *** 关键改动：使用 assembleRelease 命令进行生产就绪的优化构建 ***
+      run: ./gradlew assembleRelease
 
-    - name: List files in debug output directory # 调试步骤：列出生成的APK文件
+    - name: List files in release output directory # 可选：用于调试，列出生成的 APK 文件
       run: |
-        echo "Listing contents of app/build/outputs/apk/debug/"
-        ls -la app/build/outputs/apk/debug/
+        echo "Listing contents of app/build/outputs/apk/release/"
+        ls -la app/build/outputs/apk/release/
         echo "Searching for APK files..."
-        find app/build/outputs/apk/debug/ -name "*.apk"
-    - name: Upload Debug APK
+        find app/build/outputs/apk/release/ -name "*.apk"
+
+    - name: Upload Release APK
       uses: actions/upload-artifact@v4
       with:
-        name: app-debug-apk # 定义上传的artifact名称
-        # 修正：使用通配符匹配你的 archivesBaseName 产生的动态文件名
-        # 根据你的 build.gradle，文件名会是 'SEI804_Advanced_Menu_X.Y-debug.apk'
-        path: app/build/outputs/apk/debug/SEI804_Advanced_Menu_*.apk
-        # 注意：如果存在多个匹配的文件，upload-artifact 会上传所有匹配的文件。
-        # 通常情况下，这里只会有一个 debug APK。
+        name: app-release-apk # 定义上传的 artifact 名称
+        # 调整路径以匹配你的发布 APK 命名约定。
+        # 常见模式是：app/build/outputs/apk/release/app-release.apk
+        # 如果你的 build.gradle 中设置了 archivesBaseName，名称可能会不同，例如：
+        # app/build/outputs/apk/release/你的应用名-release.apk
+        path: app/build/outputs/apk/release/*.apk
+        # 注意：如果存在多个匹配文件，upload-artifact 会上传所有匹配的文件。
+        # 通常情况下，这里只会有一个发布 APK，除非你使用了产品变种（flavor dimensions）。
