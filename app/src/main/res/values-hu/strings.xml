@@ -62,6 +62,7 @@
         <item>8-as szám gomb</item>
         <item>9-es szám gomb</item>
         <item>*-es szám gomb</item>
+        <item>F5-es szám gomb</item>
         <item>Nincs</item>
     </string-array>
 </resources>
