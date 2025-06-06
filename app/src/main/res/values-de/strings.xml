@@ -62,6 +62,7 @@
         <item>Taste 8</item>
         <item>Taste 9</item>
         <item>Taste *</item>
+        <item>Taste F5</item>
         <item>None</item>
     </string-array>
 </resources>
