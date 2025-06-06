@@ -47,8 +47,6 @@
     <string-array name="key_code_labels">
         <item>Избранное</item>
         <item>Телегид</item>
-        <item>Cy6TMTpu</item>
-        <item>M3BeCTM9</item>
         <item>Черве Бутон</item>
         <item>Зелен Бутон</item>
         <item>Жълт Бутон</item>
@@ -63,6 +61,7 @@
         <item>Бутон 7</item>
         <item>Бутон 8</item>
         <item>Бутон 9</item>
+        <item>Бутон *</item>
         <item>Нищо</item>
     </string-array>
 </resources>
