@@ -48,9 +48,7 @@
 
     <string-array name="key_code_labels">
         <item>书签按键</item>
-        <item>指南按键</item>
-        <item>字幕按键</item>
-        <item>通知按键</item>
+        <item>导航按键</item>
         <item>红色按键</item>
         <item>绿色按键</item>
         <item>黄色按键</item>
@@ -65,6 +63,7 @@
         <item>按键7</item>
         <item>按键8</item>
         <item>按键9</item>
+        <item>按键*</item>
         <item>不设置</item>
     </string-array>
 
@@ -88,6 +87,5 @@
         <item>16</item>
         <item>17</item>
         <item>18</item>
-        <item>19</item>
     </string-array>
 </resources>
