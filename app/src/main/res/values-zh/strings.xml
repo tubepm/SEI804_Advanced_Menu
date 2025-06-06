@@ -6,7 +6,7 @@
     <string name="button_summary">选择一个按钮打开对话框。</string>
     <string name="enable_usb_debugging_first">在开发人员选项中首先启用USB调试</string>
     <string name="not_press_button">此功能为实验性功能!继续操作前，必须返回启动器。若当前不在启动器界面，请勿继续操作!按下“确定”按钮后，请勿操作遥控器任何按键，否则可能导致系统故障。</string>
-    <string name="advanced_reboot">高级重启</string>
+    <string name="advanced_reboot">SEI804高级菜单</string>
     <string name="shutdown">关机</string>
     <string name="standby">待机</string>
     <string name="reboot">重启</string>
