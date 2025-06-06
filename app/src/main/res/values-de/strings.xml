@@ -47,8 +47,6 @@
     <string-array name="key_code_labels">
         <item>Lesezeichen Taste</item>
         <item>TV-Guide Taste</item>
-        <item>Untertitel</item>
-        <item>Benachrichtig</item>
         <item>Rote Taste</item>
         <item>Grüne Taste</item>
         <item>Gelbe Taste</item>
@@ -63,6 +61,7 @@
         <item>Taste 7</item>
         <item>Taste 8</item>
         <item>Taste 9</item>
+        <item>Taste *</item>
         <item>None</item>
     </string-array>
 </resources>
