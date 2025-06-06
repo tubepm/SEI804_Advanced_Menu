@@ -1,4 +1,4 @@
-疯狗package com.jamal2367.advancedmenu
+package com.jamal2367.advancedmenu
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
