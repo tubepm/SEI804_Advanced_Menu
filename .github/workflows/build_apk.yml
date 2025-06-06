@@ -11,13 +11,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
-        distribution: 'temurin' # 将 'gradle-toolchains' 改为 'temurin'
+        distribution: 'temurin' # 修正：使用 'temurin' 作为 Java 发行版
         cache: 'gradle'
 
     - name: Grant execute permission to gradlew
@@ -26,8 +27,19 @@ jobs:
     - name: Build Debug APK
       run: ./gradlew assembleDebug
 
+    - name: List files in debug output directory # 调试步骤：列出生成的APK文件
+      run: |
+        echo "Listing contents of app/build/outputs/apk/debug/"
+        ls -la app/build/outputs/apk/debug/
+        echo "Searching for APK files..."
+        find app/build/outputs/apk/debug/ -name "*.apk"
+
     - name: Upload Debug APK
       uses: actions/upload-artifact@v4
       with:
-        name: app-debug
-        path: app/build/outputs/apk/debug/app-debug.apk
+        name: app-debug-apk # 定义上传的artifact名称
+        # 修正：使用通配符匹配你的 archivesBaseName 产生的动态文件名
+        # 根据你的 build.gradle，文件名会是 'SEI804_Advanced_Menu_X.Y-debug.apk'
+        path: app/build/outputs/apk/debug/SEI804_Advanced_Menu_*.apk
+        # 注意：如果存在多个匹配的文件，upload-artifact 会上传所有匹配的文件。
+        # 通常情况下，这里只会有一个 debug APK。
