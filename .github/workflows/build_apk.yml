@@ -17,7 +17,7 @@ jobs:
       uses: actions/setup-java@v4
       with:
         java-version: '17'
-        distribution: 'gradle-toolchains'
+        distribution: 'temurin' # 将 'gradle-toolchains' 改为 'temurin'
         cache: 'gradle'
 
     - name: Grant execute permission to gradlew
